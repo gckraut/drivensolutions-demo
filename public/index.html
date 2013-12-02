@@ -27,6 +27,7 @@
               "js/login.js",
               "js/serviceRequest.js",
               "js/customerC.js",
+              "js/customerBar.js",
               "js/main.js");
     </script>
   </head>
@@ -40,6 +41,7 @@
           zoom: 8,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
+        window.geocoder = new google.maps.Geocoder();
         window.map = new google.maps.Map(document.getElementById("map-canvas"),
             mapOptions);
         app.start();

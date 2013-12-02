@@ -47,12 +47,14 @@ var App = Backbone.Model.extend({
     window.user = user;
     this.set('user',user);
     if (typeof user === 'undefined') {
+      // delete customerC and customerBar / others
       return;
     }
     var typeTest = user.get('type');
     if (typeTest == 'customer') {
       window.customerC = new CustomerC;
       window.customerC.set('user',user);
+      window.customerBar = new CustomerBar();
     }
   },
   logout: function() {

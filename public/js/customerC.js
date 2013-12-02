@@ -48,7 +48,19 @@ var CustomerC = Backbone.Model.extend({
   },
      // Cancel a job that has not been dispatched yet
   newService: function(serviceType) {
-
+    console.log(serviceType);
+    var job = new Job();
+    job.set('service',serviceType);
+    job.set('customerUser',user);
+    job.set('status',"unassigned");
+    job.set('location',user.get('location'));
+    job.save().then(function(newJob) {
+      user.set('job',newJob);
+      user.save();
+      self.set('currentJob',newJob);
+    }, function(err) {
+      console.log('error creating job');
+    });
   },
      // Start a new job of a particular type
   callDriver: function() {

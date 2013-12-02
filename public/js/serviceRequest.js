@@ -2,6 +2,17 @@ var ServiceRequest = Backbone.View.extend({
   tagName: "div",
   className: "serviceRequest",
   events: {
+    "click .serviceButton":"startJob"
+  },
+  startJob: function(el) {
+    var objectID = $(el.target).attr('serviceID');
+    if (!objectID) {
+      objectID = $(el.target).parents('[serviceID]').attr('serviceID');
+    }
+    var service = new Service();
+    service.id = objectID;
+    customerC.newService(service);
+    this.hide();
   },
   initialize: function() {
     var self = this;

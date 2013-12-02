@@ -6,6 +6,7 @@
   height: 130px;
   float: left;
   text-align: center;
+  cursor: pointer;
 }
 
 .buttonContainer {
@@ -13,4 +14,9 @@
   width: 100%;
   height: auto;
   min-height: 284px;
+}
+
+.customerBar {
+  position: absolute;
+  width: 100%;
 }
