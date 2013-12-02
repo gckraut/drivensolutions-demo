@@ -14,7 +14,12 @@ var App = Backbone.Model.extend({
   start: function() {
     var currentUser = Parse.User.current();
     if (currentUser) {
-      this.setupUser(currentUser);
+      var self = this;
+      currentUser.fetch().then(function(user) {
+        self.setupUser(user);
+      }, function(error) {
+        self.showLogin();
+      })
     } else {
       this.showLogin();
     }
@@ -26,6 +31,7 @@ var App = Backbone.Model.extend({
     login.show();
   },
   isLoggedIn: function() {
+    return (Parse.User.current()) ? true : false;
   },
   login: function(username,password) {
     var self = this;
@@ -53,5 +59,11 @@ var App = Backbone.Model.extend({
     Parse.User.logOut();
     this.setupUser(undefined);
     this.start();
+  },
+  askIfServiceNeeded: function() {
+    if (!window.serviceRequest) {
+      window.serviceRequest = new ServiceRequest();
+    }
+    serviceRequest.show();
   }
 });

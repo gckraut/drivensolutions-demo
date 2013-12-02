@@ -1,0 +1,16 @@
+.serviceButton {
+  display: inline-block;
+  position: relative;
+  margin: 12px;
+  width: 100px;
+  height: 130px;
+  float: left;
+  text-align: center;
+}
+
+.buttonContainer {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 284px;
+}

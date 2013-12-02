@@ -16,7 +16,7 @@ var MainNav = Backbone.View.extend({
   },
   initialize: function() {
     var self = this;
-    $(document.body).prepend(this.$el);
+    $(document.body).append(this.$el);
     this.render();
     app.on('change:loggedIn', function(model) {
       self.render();

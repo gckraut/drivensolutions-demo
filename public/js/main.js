@@ -15,7 +15,6 @@ var Service = Parse.Object.extend("Service");
 
 // Support Models
 var app = new App();
-var customerC = new CustomerC();
 
 // Views
 var loadManager = new LoadManager();
@@ -29,5 +28,3 @@ var JobCollection = Parse.Collection.extend({
 
 var jobCollection = new JobCollection();
 jobCollection.fetch();
-
-app.start();

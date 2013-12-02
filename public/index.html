@@ -5,10 +5,11 @@
     <style type="text/css">
       html { height: 100% }
       body { height: 100%; margin: 0; padding: 0 }
-      #map-canvas { display: block; position: absolute; top: 0px; left: 0px; height: 100%; width: 100%; z-index: -1;}
+      #map-canvas { display: block; position: absolute; top: 0px; left: 0px; height: 100%; width: 100%; z-index: 0;}
     </style>
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/bootstrap-theme.css">
+    <link rel="stylesheet" href="css/main.css">
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbSW2hxzwURwVngm-pvK0zk9KB7HyTGfs&sensor=false"></script>
     <script src="js/head.js"></script>
@@ -24,6 +25,7 @@
               "js/mainNav.js",
               "js/app.js",
               "js/login.js",
+              "js/serviceRequest.js",
               "js/customerC.js",
               "js/main.js");
     </script>
@@ -38,8 +40,9 @@
           zoom: 8,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
-        var map = new google.maps.Map(document.getElementById("map-canvas"),
+        window.map = new google.maps.Map(document.getElementById("map-canvas"),
             mapOptions);
+        app.start();
       }
           google.maps.event.addDomListener(window, 'load', initialize);
       });
