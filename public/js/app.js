@@ -23,6 +23,7 @@ var App = Backbone.Model.extend({
     } else {
       this.showLogin();
     }
+    window.infoBubbleC = new InfoBubbleC();
   },
   showLogin: function() {
     if (!window.login) {
@@ -56,6 +57,11 @@ var App = Backbone.Model.extend({
       window.customerC.set('user',user);
       window.customerBar = new CustomerBar();
     }
+    if (typeTest == 'customerCenter') {
+      window.customerCenterC = new CustomerCenterC();
+      window.customerCenterC.set('user',user);
+      mainNav.render();
+    }
   },
   logout: function() {
     Parse.User.logOut();
@@ -67,5 +73,32 @@ var App = Backbone.Model.extend({
       window.serviceRequest = new ServiceRequest();
     }
     serviceRequest.show();
+  },
+  zoomMap: function() {
+    var locations = null;
+
+    if (typeof customerCenterC != 'undefined') {
+      locations = customerCenterC.jobMarkers;
+    };
+
+    if (!locations) {return};
+
+    var bounds = null;
+
+    for(var key in locations) 
+    {
+      var location = locations[key];
+      if (!bounds) {
+        var bounds = new google.maps.LatLngBounds(location.position,location.position);
+      };
+      bounds = bounds.extend(location.position);
+    }
+
+    map.fitBounds(bounds);
+  },
+  addMarkerListener: function(marker) {
+    google.maps.event.addListener(marker, 'click', function(elem) {
+      infoBubbleC.selectMarker(marker);
+    });
   }
 });

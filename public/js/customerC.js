@@ -17,12 +17,14 @@ var CustomerC = Backbone.Model.extend({
       user.set('location',geoPoint);
       user.save();
       var newlocation = new google.maps.LatLng(geoPoint.latitude,geoPoint.longitude);
+      map.setCenter(newlocation);
       self.myMarker.setPosition(newlocation);
       setTimeout(function() {
         customerC.updateLocation();
       },5000);
     }, function(error) {
       console.log('It would help to provide your location to the app');
+      
     });
     // setTimeout(self.updateLocation.apply(self),9000);
   },
@@ -44,7 +46,14 @@ var CustomerC = Backbone.Model.extend({
   },
      // Check to see if there’s already a current job going on
   cancelJob: function() {
-
+    var job = this.get('currentJob');
+    if (!job) {return;};
+    var status = job.get('status');
+    if (status != 'unassigned') {
+      return false;
+    }
+    
+    return true;
   },
      // Cancel a job that has not been dispatched yet
   newService: function(serviceType) {
@@ -89,6 +98,17 @@ var CustomerC = Backbone.Model.extend({
      // Get the driver’s location and info
   refresh: function() {
 
+  },
+  status: function() {
+    var currentJob = this.get('currentJob');
+    if (!currentJob) {
+      return 'Awaiting service request ...';
+    };
+    var jobStatus = currentJob.get('status');
+    if (jobStatus == 'unassigned') {
+      return 'We received your request and will contact you as soon as we can to assist you further.';
+    }
+    console.log(currentJob,jobStatus);
   }
      // Check on the current job status and get the driver if necessary and refresh their location
 });

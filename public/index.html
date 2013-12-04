@@ -28,7 +28,10 @@
               "js/serviceRequest.js",
               "js/customerC.js",
               "js/customerBar.js",
-              "js/main.js");
+              "js/customerCenterC.js",
+              "js/main.js",
+              "js/infoBubble.js",
+              "js/infoBubbleC.js");
     </script>
   </head>
   <body>
@@ -38,8 +41,9 @@
       function initialize() {
         var mapOptions = {
           center: new google.maps.LatLng(41.877773,-87.629614),
-          zoom: 8,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
+          zoom: 16,
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          disableDefaultUI: true
         };
         window.geocoder = new google.maps.Geocoder();
         window.map = new google.maps.Map(document.getElementById("map-canvas"),

@@ -23,7 +23,7 @@ var mainNav = new MainNav();
 // Collections
 var JobCollection = Parse.Collection.extend({
 	model: Job,
-	query: (new Parse.Query(Job)).include("customer")
+	query: (new Parse.Query(Job)).include("customerUser")
 });
 
 var jobCollection = new JobCollection();
