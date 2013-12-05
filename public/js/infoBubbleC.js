@@ -15,15 +15,22 @@ var InfoBubbleC = Backbone.Model.extend({
   	this.finalLoadCount = 0;
   },
   setupMarker: function() {
-  	var marker = this.get('marker');
-  	var type = marker.dsType;
-  	var identifier = marker.dsIdentifier;
-  	if (type == 'Job') {
-  		var jobSearch = jobCollection.filter(function(obj){return obj.id == identifier});
-  		if (jobSearch.length > 0) {
-  			this.setupJob(jobSearch[0]);
-  		}
-  	}
+    var job = this.getJob();
+    if (job) {
+      this.setupJob(this.getJob());
+    };
+  },
+  getJob: function() {
+    var marker = this.get('marker');
+    var type = marker.dsType;
+    var identifier = marker.dsIdentifier;
+    if (type == 'Job') {
+      var jobSearch = jobCollection.filter(function(obj){return obj.id == identifier});
+      if (jobSearch.length > 0) {
+        return jobSearch[0];
+      }
+      return null;
+    }
   },
   setupJob: function(job) {
     this.clearLoaded();
@@ -43,7 +50,14 @@ var InfoBubbleC = Backbone.Model.extend({
       customerData = JSON.stringify(customer.toJSON());
     }
     var self = this;
-    var data = {}
+    var job = this.getJob();
+    var data = {
+      name: customer.get('firstName') + ' ' + customer.get('lastName'),
+      status:job.get('status'),
+      date:moment(job.createdAt).format('MMMM Do YYYY, h:mm:ss a'),
+      service:job.get('service').get('name'),
+      contactedByContactCenter: ((job.get('contactedByContactCenter')) ? 'Yes':'No')
+    }
     loadManager.loadHTML('customerInfoBubble.html',data, function(html) {
       //self.$el.html(html);
       self.infoBubble.addTab('Customer',html);
@@ -80,7 +94,6 @@ var InfoBubbleC = Backbone.Model.extend({
   },
   finishRender: function() {
     this.loadCount++;
-    console.log(this.finalLoadCount,this.loadCount)
     if (this.finalLoadCount === this.loadCount) {
       this.infoBubble.open(map,this.get('marker'));
     }
