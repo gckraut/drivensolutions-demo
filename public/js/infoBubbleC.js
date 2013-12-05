@@ -1,11 +1,24 @@
-var InfoBubbleC = Backbone.Model.extend({
+var InfoBubbleC = Backbone.View.extend({
+  events: {
+    "click .callCustomerButton":"callCustomerButton"
+  },
+  callCustomerButton: function() {
+    var self = this;
+    this.job.set('contactedByContactCenter',true);
+    this.job.save().then(function(success) {
+      self.setupMarker();
+    });
+  },
   initialize: function() {
     this.infoBubble = new InfoBubble({
       maxWidth: 320
     });
   },
   selectMarker: function(marker) {
-    this.set('marker',marker);
+    if (this.infoBubble.isOpen && this.marker != marker) {
+      this.infoBubble.close();
+    };
+    this.marker = marker;
     
     this.setupMarker();
 
@@ -21,7 +34,7 @@ var InfoBubbleC = Backbone.Model.extend({
     };
   },
   getJob: function() {
-    var marker = this.get('marker');
+    var marker = this.marker;
     var type = marker.dsType;
     var identifier = marker.dsIdentifier;
     if (type == 'Job') {
@@ -34,7 +47,7 @@ var InfoBubbleC = Backbone.Model.extend({
   },
   setupJob: function(job) {
     this.clearLoaded();
-  	this.set('job',job);
+  	this.job = job;
   	var removeCount = this.infoBubble.tabs_.length;
   	for (var i = removeCount - 1; i >= 0; i--) {
   		this.infoBubble.removeTab(0);
@@ -45,6 +58,7 @@ var InfoBubbleC = Backbone.Model.extend({
   },
   addCustomerTab: function(customer) {
     this.finalLoadCount++;
+    this.customer = customer;
     var customerData = 'No customer assigned';
     if (customer) {
       customerData = JSON.stringify(customer.toJSON());
@@ -95,7 +109,9 @@ var InfoBubbleC = Backbone.Model.extend({
   finishRender: function() {
     this.loadCount++;
     if (this.finalLoadCount === this.loadCount) {
-      this.infoBubble.open(map,this.get('marker'));
+      if (!this.infoBubble.isOpen()) {
+        this.infoBubble.open(map,this.marker);
+      }
     }
   }
 });
