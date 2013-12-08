@@ -12,6 +12,9 @@ var InfoBubbleC = Backbone.View.extend({
   assignServiceCenter: function() {
     app.showServiceCenterAssignmentForJob(this.job);
   },
+  assignDriver: function() {
+    app.showDriverAssignmentForJob(this.job);
+  },
   initialize: function() {
     this.infoBubble = new InfoBubble({
       maxWidth: 320
@@ -35,6 +38,10 @@ var InfoBubbleC = Backbone.View.extend({
     if (job) {
       this.setupJob(this.getJob());
     };
+    var driver = this.getDriver();
+    if (driver) {
+      this.setupdriver(this.getDriver());
+    };
   },
   getJob: function() {
     var marker = this.marker;
@@ -44,6 +51,18 @@ var InfoBubbleC = Backbone.View.extend({
       var jobSearch = jobCollection.filter(function(obj){return obj.id == identifier});
       if (jobSearch.length > 0) {
         return jobSearch[0];
+      }
+      return null;
+    }
+  },
+  getDriver: function() {
+    var marker = this.marker;
+    var type = marker.dsType;
+    var identifier = marker.dsIdentifier;
+    if (type == 'Driver') {
+      var driverSearch = driverCollection.filter(function(obj){return obj.id == identifier});
+      if (driverSearch.length > 0) {
+        return driverSearch[0];
       }
       return null;
     }
@@ -69,6 +88,15 @@ var InfoBubbleC = Backbone.View.extend({
   	// this.addServiceCenterTab(job.get('serviceCenter'));
   	// this.addDriverTab(job.get('driver'));
   },
+  setupdriver: function(driver) {
+    var driverFetcher = new ObjectFetcher(driver);
+    var self = this;
+    driverFetcher.fetch().then(function(fetchedDriver) {
+      self.driver = fetchedDriver;
+      self.resetBubble();
+      self.addDriverTab(self.driver);
+    })
+  },
   addJobTab: function(job) {
     var customer = job.get('customerUser');
     this.finalLoadCount++;
@@ -81,7 +109,10 @@ var InfoBubbleC = Backbone.View.extend({
     if (serviceCenter) {
       serviceCenter = serviceCenter.toJSON();
     };
-    var driver = job.get('driver');
+    var driver = job.get('driverUser');
+    if (driver) {
+      driver = driver.toJSON();
+    };
     var self = this;
     var data = {
       name: customer.get('firstName') + ' ' + customer.get('lastName'),
@@ -90,7 +121,9 @@ var InfoBubbleC = Backbone.View.extend({
       service:job.get('service').get('name'),
       contactedByContactCenter: ((job.get('contactedByContactCenter')) ? 'Yes':'No'),
       serviceCenter:serviceCenter,
-      driver: null
+      driver: driver,
+      isCustomerCenter: app.isCustomerCenter(),
+      isServiceCenter: app.isServiceCenter()
     }
     loadManager.loadHTML('customerInfoBubble.html',data, function(html) {
       //self.$el.html(html);
@@ -114,7 +147,7 @@ var InfoBubbleC = Backbone.View.extend({
   },
   addDriverTab: function(driver) {
     this.finalLoadCount++;
-    var driverData = 'No service center assigned';
+    var driverData = 'No driver assigned';
     if (driver) {
       driverData = JSON.stringify(driver.toJSON());
     }

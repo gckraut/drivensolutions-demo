@@ -51,6 +51,8 @@ var App = Backbone.Model.extend({
       // delete customerC and customerBar / others
       delete window.customerC;
       delete window.customerCenterC;
+      delete window.serviceCenterC;
+      delete window.driver;
       delete window.customerBar;
       return;
     }
@@ -65,6 +67,17 @@ var App = Backbone.Model.extend({
       window.customerCenterC.set('user',user);
       mainNav.render();
     }
+    if (typeTest == 'serviceCenterRep') {
+      window.serviceCenterC = new ServiceCenterC();
+      window.serviceCenterC.set('user',user);
+      window.serviceCenterC.set('serviceCenter',user.get('serviceCenter'));
+      mainNav.render();
+    };
+    if (typeTest == 'driver') {
+      window.driverC = new DriverC();
+      window.driverC.set('user',user);
+      mainNav.render();
+    };
   },
   logout: function() {
     Parse.User.logOut();
@@ -84,11 +97,27 @@ var App = Backbone.Model.extend({
     window.assignServiceCenter = new AssignServiceCenter(job);
     assignServiceCenter.show();
   },
+  showDriverAssignmentForJob: function(job) {
+    if (window.assignDriver) {
+      delete window.assignDriver;
+    };
+    window.assignDriver = new AssignDriver(job);
+    assignDriver.show();
+  },
   zoomMap: function() {
     var locations = null;
 
-    if (typeof customerCenterC != 'undefined') {
+    if (this.isCustomerCenter()) {
       locations = customerCenterC.jobMarkers;
+    };
+
+    if (this.isServiceCenter()) {
+      locations = serviceCenterC.jobMarkers;
+      locations = locations.concat(serviceCenterC.driverMarkers);
+    };
+
+    if (this.isDriver()) {
+      locations = driverC.jobMarkers;
     };
 
     if (!locations) {return};
@@ -110,5 +139,17 @@ var App = Backbone.Model.extend({
     google.maps.event.addListener(marker, 'click', function(elem) {
       infoBubbleC.selectMarker(marker);
     });
+  },
+  isCustomer: function() {
+    return typeof customerC != 'undefined';
+  },
+  isCustomerCenter: function() {
+    return typeof customerCenterC != 'undefined';
+  },
+  isServiceCenter: function() {
+    return typeof serviceCenterC != 'undefined';
+  },
+  isDriver: function() {
+    return typeof driverC != 'undefined';
   }
 });

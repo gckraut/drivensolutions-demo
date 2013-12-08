@@ -34,12 +34,24 @@ var ServiceCenterCollection = Parse.Collection.extend({
 	query: (new Parse.Query(ServiceCenter))
 });
 
+var DriverCollection = Parse.Collection.extend({
+	model: "User",
+	setServiceCenter: function(serviceCenter) {
+		this.serviceCenter = serviceCenter;
+		var modQuery = this.query;
+		modQuery.equalTo('serviceCenter',serviceCenter);
+		this.query = modQuery;
+	},
+	query: (new Parse.Query("User")).include('vehicle').equalTo('type','driver')
+});
+
 var serviceCenterCollection = new ServiceCenterCollection();
 serviceCenterCollection.fetch();
 
 var ObjectFetcher = function(objectToFetch) {
 	this.objectFetchDescription = {
-		"Job":["customerUser","serviceCenter","driverUser","service"]
+		"Job":["customerUser","serviceCenter","driverUser","service"],
+		"_User":["vehicle"]
 	};
 	this.objectToFetch = objectToFetch;
 	this.fetch = function(objectToFetch) {

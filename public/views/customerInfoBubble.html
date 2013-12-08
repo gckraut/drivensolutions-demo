@@ -62,7 +62,7 @@
         No driver Assigned
         {{/driver}}
         {{#driver}}
-        Name
+        {{firstName}} {{lastName}}
         {{/driver}}
       </div>
     </div>
@@ -74,7 +74,12 @@
     		<button type="button" class="btn btn-success callCustomerButton" onclick="infoBubbleC.callCustomerButton()">Call Customer</button>
         <br>
         <br>
+        {{#isCustomerCenter}}
     		<button type="button" class="btn btn-success assignServiceCenterButton" onclick="infoBubbleC.assignServiceCenter()">Assign Service Center</button>
+        {{/isCustomerCenter}}
+        {{#isServiceCenter}}
+        <button type="button" class="btn btn-success assignDriver" onclick="infoBubbleC.assignDriver()">Assign Driver</button>
+        {{/isServiceCenter}}
     	</div>
     </div>
   </div>

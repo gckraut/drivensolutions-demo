@@ -27,7 +27,8 @@ var MainNav = Backbone.View.extend({
     var self = this;
     var data = {
       loggedIn: app.get('loggedIn'),
-      callCenter: (typeof customerCenterC !== 'undefined')
+      callCenter: (typeof customerCenterC !== 'undefined'),
+      serviceCenter: (typeof serviceCenterC !== 'undefined')
     };
     if (typeof user !== 'undefined') {
       data.name = user.get('firstName');
