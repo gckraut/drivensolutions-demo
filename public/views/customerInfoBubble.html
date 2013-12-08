@@ -49,7 +49,7 @@
         No Service Center Assigned
         {{/serviceCenter}}
         {{#serviceCenter}}
-        Name
+          {{name}}
         {{/serviceCenter}}
       </div>
     </div>
@@ -72,8 +72,9 @@
     	</div>
     	<div class="col-md-8">
     		<button type="button" class="btn btn-success callCustomerButton" onclick="infoBubbleC.callCustomerButton()">Call Customer</button>
-    		<button type="button" class="btn btn-success assignServiceProviderButton" onclick="infoBubbleC.assignServiceProvider()">Assign Service Provider</button>
-    		<button type="button" class="btn btn-success attachNoteButton">Attach Note to Job</button>
+        <br>
+        <br>
+    		<button type="button" class="btn btn-success assignServiceCenterButton" onclick="infoBubbleC.assignServiceCenter()">Assign Service Center</button>
     	</div>
     </div>
   </div>

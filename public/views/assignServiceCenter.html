@@ -1,0 +1,39 @@
+<!-- Modal -->
+<div class="modal fade" id="assignServiceCenterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Assign Service Center to {{customerName}} for {{serviceName}}</h4>
+      </div>
+      <div class="modal-body">
+          <table class="table">
+            <thead>
+              <td>Name</td>
+              <td>Info</td>
+            </thead>
+            {{#serviceCenters}}
+            <tr>
+              <td>
+                {{name}}<br>
+                {{availableDrivers}} Available Drivers<br>
+                {{distance}} Miles<br>
+                {{^selected}}
+                <button type="button" class="btn btn-info btn-xs assignJobButton" objectId="{{objectId}}">Assign To {{customerName}} for {{serviceName}}</button>
+                {{/selected}}
+                {{#selected}}
+                <button type="button" class="btn btn-danger btn-xs unassignJobButton">Unassign From {{customerName}} for {{serviceName}}</button>
+                {{/selected}}
+              </td>
+              <td>
+                {{address}}<br>
+                {{city}}, {{state}}<br>
+                {{phone}}
+              </td>
+            </tr>
+            {{/serviceCenters}}
+
+          </table>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

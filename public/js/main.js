@@ -39,7 +39,7 @@ serviceCenterCollection.fetch();
 
 var ObjectFetcher = function(objectToFetch) {
 	this.objectFetchDescription = {
-		"Job":["customerUser","serviceCenter","driverUser"]
+		"Job":["customerUser","serviceCenter","driverUser","service"]
 	};
 	this.objectToFetch = objectToFetch;
 	this.fetch = function(objectToFetch) {

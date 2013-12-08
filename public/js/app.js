@@ -74,13 +74,12 @@ var App = Backbone.Model.extend({
     }
     serviceRequest.show();
   },
-  showServiceProviderAssignmentForJob: function(job) {
-    if (window.assignServiceProvider) {
-      delete window.assignServiceProvider;
+  showServiceCenterAssignmentForJob: function(job) {
+    if (window.assignServiceCenter) {
+      delete window.assignServiceCenter;
     };
-    window.assignServiceProvider = new AssignServiceProvider();
-    assignServiceProvider.job = job;
-    assignServiceProvider.show();
+    window.assignServiceCenter = new AssignServiceCenter(job);
+    assignServiceCenter.show();
   },
   zoomMap: function() {
     var locations = null;

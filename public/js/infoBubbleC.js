@@ -9,8 +9,8 @@ var InfoBubbleC = Backbone.View.extend({
       self.setupMarker();
     });
   },
-  assignServiceProvider: function() {
-    app.showServiceProviderAssignmentForJob(this.job);
+  assignServiceCenter: function() {
+    app.showServiceCenterAssignmentForJob(this.job);
   },
   initialize: function() {
     this.infoBubble = new InfoBubble({
@@ -56,9 +56,16 @@ var InfoBubbleC = Backbone.View.extend({
     };
   },
   setupJob: function(job) {
-    this.job = job;
-    this.resetBubble();
-  	this.addJobTab(job);
+    var jobFetcher = new ObjectFetcher(job);
+    var self = this;
+    jobFetcher.fetch().then(function(fetchedJob) {
+      self.job = fetchedJob;
+      self.resetBubble();
+      self.addJobTab(self.job);
+    });
+   //  this.job = job;
+   //  this.resetBubble();
+  	// this.addJobTab(job);
   	// this.addServiceCenterTab(job.get('serviceCenter'));
   	// this.addDriverTab(job.get('driver'));
   },
@@ -71,6 +78,9 @@ var InfoBubbleC = Backbone.View.extend({
       customerData = JSON.stringify(customer.toJSON());
     }
     var serviceCenter = job.get('serviceCenter');
+    if (serviceCenter) {
+      serviceCenter = serviceCenter.toJSON();
+    };
     var driver = job.get('driver');
     var self = this;
     var data = {
@@ -79,7 +89,7 @@ var InfoBubbleC = Backbone.View.extend({
       date:moment(job.createdAt).format('MMMM Do YYYY, h:mm:ss a'),
       service:job.get('service').get('name'),
       contactedByContactCenter: ((job.get('contactedByContactCenter')) ? 'Yes':'No'),
-      serviceCenter:null,
+      serviceCenter:serviceCenter,
       driver: null
     }
     loadManager.loadHTML('customerInfoBubble.html',data, function(html) {

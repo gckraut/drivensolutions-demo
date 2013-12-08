@@ -6,9 +6,15 @@ var CustomerCenterC = Backbone.Model.extend({
     this.on('change:user', function(model,newUser) {
       // this.checkForJobs();
     });
+    this.getJobs();
+    
+  },
+  getJobs: function() {
+    var self = this;
     window.jobCollection = new JobCollection();
     window.jobCollection.fetch().then(function(results) {
       for (jobIndex in window.jobCollection.models) {
+        var shouldAutoZoom = true;
         var job = window.jobCollection.at(jobIndex);
         var jobId = job.id;
         // console.log(job);
@@ -25,11 +31,13 @@ var CustomerCenterC = Backbone.Model.extend({
         
         if (jobTest) {
           jobTest.setPosition(newlocation);
+          shouldAutoZoom = false;
         } else {
           jobTest = new google.maps.Marker({
             map: map,
             title: 'My Location',
-            position: newlocation
+            position: newlocation,
+            icon: 'img/userMapIcon.png'
           });
           jobTest.dsType = 'Job';
           jobTest.dsIdentifier = jobId;
@@ -37,13 +45,12 @@ var CustomerCenterC = Backbone.Model.extend({
           app.addMarkerListener(jobTest);
         }
       }
-      app.zoomMap();
-    }, function(error) {
+      if (shouldAutoZoom) {
+        app.zoomMap();
+      };
+      }, function(error) {
       console.log('Error: getting jobs');
-    })
-  },
-  getJobs: function() {
-
+    });
   },
      // Refresh all of the jobs currently loaded, update counts to show how many need to be contacted/assigned to a service center
   getServiceCenters: function() {
