@@ -13,6 +13,9 @@ var CustomerC = Backbone.Model.extend({
     var self = this;
     console.log('getting location');
     Parse.GeoPoint.current().then(function(geoPoint) {
+      if (typeof window.customerC === 'undefined') {
+        return;
+      }
       self.set('currentLocation',geoPoint);
       user.set('location',geoPoint);
       user.save();
@@ -20,6 +23,9 @@ var CustomerC = Backbone.Model.extend({
       map.setCenter(newlocation);
       self.myMarker.setPosition(newlocation);
       setTimeout(function() {
+        if (typeof window.customerC === 'undefined') {
+          return;
+        }
         customerC.updateLocation();
       },5000);
     }, function(error) {

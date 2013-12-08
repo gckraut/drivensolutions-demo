@@ -49,6 +49,9 @@ var App = Backbone.Model.extend({
     this.set('user',user);
     if (typeof user === 'undefined') {
       // delete customerC and customerBar / others
+      delete window.customerC;
+      delete window.customerCenterC;
+      delete window.customerBar;
       return;
     }
     var typeTest = user.get('type');
