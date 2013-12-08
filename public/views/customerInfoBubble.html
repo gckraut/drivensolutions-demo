@@ -37,8 +37,34 @@
     		Contacted:
     	</div>
     	<div class="col-md-8">
-    		{{contactedByContactCenter}}
+    		{{contactedByContactCenter}} (Yes if contacted by contact center)
     	</div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        Shop:
+      </div>
+      <div class="col-md-8">
+        {{^serviceCenter}}
+        No Service Center Assigned
+        {{/serviceCenter}}
+        {{#serviceCenter}}
+        Name
+        {{/serviceCenter}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        Driver:
+      </div>
+      <div class="col-md-8">
+        {{^driver}}
+        No driver Assigned
+        {{/driver}}
+        {{#driver}}
+        Name
+        {{/driver}}
+      </div>
     </div>
     <div class="row">
     	<div class="col-md-4">
@@ -46,7 +72,7 @@
     	</div>
     	<div class="col-md-8">
     		<button type="button" class="btn btn-success callCustomerButton" onclick="infoBubbleC.callCustomerButton()">Call Customer</button>
-    		<button type="button" class="btn btn-success assignServiceProviderButton">Assign Service Provider</button>
+    		<button type="button" class="btn btn-success assignServiceProviderButton" onclick="infoBubbleC.assignServiceProvider()">Assign Service Provider</button>
     		<button type="button" class="btn btn-success attachNoteButton">Attach Note to Job</button>
     	</div>
     </div>

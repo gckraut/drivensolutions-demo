@@ -9,6 +9,9 @@ var InfoBubbleC = Backbone.View.extend({
       self.setupMarker();
     });
   },
+  assignServiceProvider: function() {
+    app.showServiceProviderAssignmentForJob(this.job);
+  },
   initialize: function() {
     this.infoBubble = new InfoBubble({
       maxWidth: 320
@@ -45,32 +48,39 @@ var InfoBubbleC = Backbone.View.extend({
       return null;
     }
   },
-  setupJob: function(job) {
+  resetBubble: function() {
     this.clearLoaded();
-  	this.job = job;
-  	var removeCount = this.infoBubble.tabs_.length;
-  	for (var i = removeCount - 1; i >= 0; i--) {
-  		this.infoBubble.removeTab(0);
-  	};
-  	this.addCustomerTab(job.get('customerUser'));
-  	this.addServiceCenterTab(job.get('serviceCenter'));
-  	this.addDriverTab(job.get('driver'));
+    var removeCount = this.infoBubble.tabs_.length;
+    for (var i = removeCount - 1; i >= 0; i--) {
+      this.infoBubble.removeTab(0);
+    };
   },
-  addCustomerTab: function(customer) {
+  setupJob: function(job) {
+    this.job = job;
+    this.resetBubble();
+  	this.addJobTab(job);
+  	// this.addServiceCenterTab(job.get('serviceCenter'));
+  	// this.addDriverTab(job.get('driver'));
+  },
+  addJobTab: function(job) {
+    var customer = job.get('customerUser');
     this.finalLoadCount++;
     this.customer = customer;
     var customerData = 'No customer assigned';
     if (customer) {
       customerData = JSON.stringify(customer.toJSON());
     }
+    var serviceCenter = job.get('serviceCenter');
+    var driver = job.get('driver');
     var self = this;
-    var job = this.getJob();
     var data = {
       name: customer.get('firstName') + ' ' + customer.get('lastName'),
       status:job.get('status'),
       date:moment(job.createdAt).format('MMMM Do YYYY, h:mm:ss a'),
       service:job.get('service').get('name'),
-      contactedByContactCenter: ((job.get('contactedByContactCenter')) ? 'Yes':'No')
+      contactedByContactCenter: ((job.get('contactedByContactCenter')) ? 'Yes':'No'),
+      serviceCenter:null,
+      driver: null
     }
     loadManager.loadHTML('customerInfoBubble.html',data, function(html) {
       //self.$el.html(html);

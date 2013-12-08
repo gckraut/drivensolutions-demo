@@ -10,7 +10,7 @@ var Event = Parse.Object.extend("Event");
 var Job = Parse.Object.extend("Job");
 var Perk = Parse.Object.extend("Perk");
 var Representative = Parse.Object.extend("Car");
-var ServiceProvider = Parse.Object.extend("ServiceProvider");
+var ServiceCenter = Parse.Object.extend("ServiceCenter");
 var Service = Parse.Object.extend("Service");
 
 // Support Models
@@ -28,3 +28,32 @@ var JobCollection = Parse.Collection.extend({
 
 var jobCollection = new JobCollection();
 jobCollection.fetch();
+
+var ServiceCenterCollection = Parse.Collection.extend({
+	model: ServiceCenter,
+	query: (new Parse.Query(ServiceCenter))
+});
+
+var serviceCenterCollection = new ServiceCenterCollection();
+serviceCenterCollection.fetch();
+
+var ObjectFetcher = function(objectToFetch) {
+	this.objectFetchDescription = {
+		"Job":["customerUser","serviceCenter","driverUser"]
+	};
+	this.objectToFetch = objectToFetch;
+	this.fetch = function(objectToFetch) {
+		if (!objectToFetch) {
+			objectToFetch = this.objectToFetch;
+		}
+		var className = this.objectToFetch.className;
+		var includes = this.objectFetchDescription[className];
+		var query = new Parse.Query(className);
+		for (var i = includes.length - 1; i >= 0; i--) {
+			var include = includes[i];
+			query.include(include);
+		};
+		query.equalTo('objectId',objectToFetch.id);
+		return query.first();
+	}
+}

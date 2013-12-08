@@ -11,11 +11,11 @@ var CustomerCenterC = Backbone.Model.extend({
       for (jobIndex in window.jobCollection.models) {
         var job = window.jobCollection.at(jobIndex);
         var jobId = job.id;
-        console.log(job);
+        // console.log(job);
         var jobLocation = job.get('location');
         
         if (!jobLocation) {
-          console.log('No location' + jobId);
+          // console.log('No location' + jobId);
           continue;
         };
         
