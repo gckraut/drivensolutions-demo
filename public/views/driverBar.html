@@ -1,0 +1,24 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-3">
+        Driving to: {{address}}
+      </div>
+      <div class="col-md-3">
+        <button type="button" class="btn btn-success callContactCenterButton">Call Contact Center</button>
+        {{#callServiceProvider}}
+        <button type="button" class="btn btn-success callServiceProviderButton">Call Service Provider</button>
+        {{/callServiceProvider}}
+        {{#callCustomer}}
+        <button type="button" class="btn btn-success callCustomerButton">Call Customer</button>
+        {{/callCustomer}}
+      </div>
+      <div class="col-md-3">
+        <button type="button" class="btn btn-info arrivedButton">Arrived</button>
+      </div>
+      <div class="col-md-3">
+        <h4 class="driverStatusBar">{{status}}</h4>
+      </div>
+    </div>
+  </div>
+</div>

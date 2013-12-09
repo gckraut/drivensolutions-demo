@@ -10,6 +10,7 @@ var App = Backbone.Model.extend({
         this.set('loggedIn',false);
       }
     });
+    if(this.html5_audio()) this.play_html5_audio = true;
   },
   start: function() {
     var currentUser = Parse.User.current();
@@ -54,6 +55,7 @@ var App = Backbone.Model.extend({
       delete window.serviceCenterC;
       delete window.driver;
       delete window.customerBar;
+      delete window.driverBar;
       return;
     }
     var typeTest = user.get('type');
@@ -65,19 +67,18 @@ var App = Backbone.Model.extend({
     if (typeTest == 'customerCenter') {
       window.customerCenterC = new CustomerCenterC();
       window.customerCenterC.set('user',user);
-      mainNav.render();
     }
     if (typeTest == 'serviceCenterRep') {
       window.serviceCenterC = new ServiceCenterC();
       window.serviceCenterC.set('user',user);
       window.serviceCenterC.set('serviceCenter',user.get('serviceCenter'));
-      mainNav.render();
     };
     if (typeTest == 'driver') {
       window.driverC = new DriverC();
       window.driverC.set('user',user);
-      mainNav.render();
+      window.driverBar = new DriverBar();
     };
+    mainNav.render();
   },
   logout: function() {
     Parse.User.logOut();
@@ -103,6 +104,13 @@ var App = Backbone.Model.extend({
     };
     window.assignDriver = new AssignDriver(job);
     assignDriver.show();
+  },
+  showJobList: function() {
+    if (window.jobList) {
+      delete window.jobList;
+    };
+    window.jobList = new JobList();
+    jobList.show();
   },
   zoomMap: function() {
     var locations = null;
@@ -151,5 +159,31 @@ var App = Backbone.Model.extend({
   },
   isDriver: function() {
     return typeof driverC != 'undefined';
-  }
+  },
+  speak: function(textToSpeak) {
+    this.play_sound("http://translate.google.com/translate_tts?ie=UTF-8&q="+encodeURIComponent(textToSpeak)+"&tl=en&total=1&idx=0prev=input");  
+    console.log('App::Speak: ' + textToSpeak);
+  },
+  html5_audio: function(){
+    var a = document.createElement('audio');
+    return !!(a.canPlayType && a.canPlayType('audio/mpeg;').replace(/no/, ''));
+  },
+  play_html5_audio: false,
+  play_sound: function(url){
+    if(this.play_html5_audio){
+        var snd = new Audio(url);
+        snd.load();
+        snd.play();
+    }else{
+        $("#sound").remove();
+        var sound = $("<embed id='sound' type='audio/mpeg' />");
+        sound.attr('src', url);
+        sound.attr('loop', false);
+        sound.attr('hidden', true);
+        sound.attr('autostart', true);
+        $('body').append(sound);
+    }
+  },
+
+
 });

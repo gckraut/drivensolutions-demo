@@ -1,12 +1,114 @@
 var DriverC = Backbone.Model.extend({
   initialize: function() {
+    this.myMarker = new google.maps.Marker({
+      map: map,
+      title: 'My Location'
+    });
     var self = this;
     map.setOptions({disableDefaultUI:false,panControlOptions:{position: google.maps.ControlPosition.LEFT_BOTTOM},zoomControlOptions:{position:google.maps.ControlPosition.LEFT_CENTER}});
     this.jobMarkers = {};
     this.on('change:user', function(model,newUser) {
       // this.checkForJobs();
       model.getJobs();
+      model.checkForCurrentJob();
     });
+    this.on('change:currentJob', function(model,newCurrentJob) {
+      if (!newCurrentJob) {
+        model.getJobs();
+        model.checkForCurrentJob();
+      } else {
+        model.updateDirections();
+      }
+    });
+    this.updateLocation();
+    $('body').append('<div class="directions"></div>');
+    $('.directions').hide();
+  },
+  updateDirections: function() {
+    var startingPoint = this.get('currentLocation');
+    if (!startingPoint) {
+      setTimeout(function() {
+        if (typeof window.driverC === 'undefined') {
+          return;
+        }
+        driverC.updateDirections();
+      },5000);
+      return;
+    };
+    var destination = this.get('currentJob').get('location');
+    if (!this.directionsDisplay) {
+      this.directionsDisplay = new google.maps.DirectionsRenderer();
+      this.directionsService = new google.maps.DirectionsService();
+      this.directionsDisplay.setMap(map);
+      this.directionsDisplay.setPanel($('.directions')[0]);
+    };
+    var start = startingPoint.latitude + ',' + startingPoint.longitude;
+    var end = destination.latitude + ',' + destination.longitude;
+    var request = {
+      origin: start,
+      destination: end,
+      travelMode: google.maps.TravelMode.DRIVING
+    };
+    var self = this;
+    this.directionsService.route(request, function(response, status) {
+      if (status == google.maps.DirectionsStatus.OK) {
+        self.directionsDisplay.setDirections(response);
+        $('.directions').show();
+      }
+    });
+  },
+  updateLocation: function() {
+    var self = this;
+    console.log('getting location');
+    Parse.GeoPoint.current().then(function(geoPoint) {
+      if (typeof window.driverC === 'undefined') {
+        return;
+      }
+      self.set('currentLocation',geoPoint);
+      user.set('location',geoPoint);
+      user.save();
+      var newlocation = new google.maps.LatLng(geoPoint.latitude,geoPoint.longitude);
+      map.setCenter(newlocation);
+      self.myMarker.setPosition(newlocation);
+      setTimeout(function() {
+        if (typeof window.driverC === 'undefined') {
+          return;
+        }
+        driverC.updateLocation();
+      },5000);
+    }, function(error) {
+      console.log('It would help to provide your location to the app');
+      
+    });
+    // setTimeout(self.updateLocation.apply(self),9000);
+  },
+  checkForCurrentJob: function() {
+    var self = this;
+    var user = this.get('user');
+    var job = user.get('job');
+    if (job) {
+      job.fetch().then(function(fetchedJob) {
+        self.set('currentJob',fetchedJob);
+      }, function(error) {
+        console.log('error getting current job');
+        self.checkForCurrentJob();
+      })
+    } else {
+      console.log('no current job');
+      app.showJobList();
+    }
+  },
+  status: function() {
+    return '';
+    var currentJob = this.get('currentJob');
+    if (!currentJob) {
+      return 'Awaiting service request ...';
+    };
+    var jobStatus = currentJob.get('status');
+    if (jobStatus == 'unassigned') {
+      return 'We received your request and will contact you as soon as we can to assist you further.';
+    }
+    console.log(currentJob,jobStatus);
   },
   getJobs: function() {
     var self = this;

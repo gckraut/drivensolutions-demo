@@ -20,9 +20,32 @@
   position: absolute;
   width: 100%;
 }
+
+.driverBar {
+  position: absolute;
+  width: 100%;
+}
+
 .modal.modal-wide .modal-dialog {
   width: 90%;
 }
 .modal-wide .modal-body {
   overflow-y: auto;
+}
+
+.directions-panel {
+  height: 100%;
+  float: right;
+  width: 390px;
+  overflow: auto;
+}
+
+.directions {
+  position: absolute;
+  width: 25%;
+  height: 100%;
+  margin-top: 144px;
+  top:0px;
+  right:0px;
+  background-color: white;
 }
