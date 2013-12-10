@@ -4,7 +4,11 @@ var AssignServiceCenter = Backbone.View.extend({
   divID: "assignServiceCenterModal",
   events: {
     "click .assignJobButton":"assignJobToServiceCenter",
-    "click .unassignJobButton":"unassignJobFromServiceCenter"
+    "click .unassignJobButton":"unassignJobFromServiceCenter",
+    "click .phoneButton":"callPhone"
+  },
+  callPhone: function(e) {
+    app.call($(e.target).attr('phone'));
   },
   assignJobToServiceCenter: function(e) {
     var self = this;

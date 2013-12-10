@@ -5,7 +5,11 @@ var DriverBar = Backbone.View.extend({
   className: "driverBar",
 
   events: {
-    'click .arrivedButton':'arrived'
+    'click .arrivedButton':'arrived',
+    'click .callCustomerButton':'callCustomerButton'
+  },
+  callCustomerButton: function() {
+    app.callCustomerForJob(driverC.get('currentJob'));
   },
   arrived: function() {
     var currentJob = driverC.get('currentJob');

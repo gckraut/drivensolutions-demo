@@ -4,7 +4,11 @@ var AssignDriver = Backbone.View.extend({
   divID: "assignDriverModal",
   events: {
     "click .assignJobButton":"assignJobToDriver",
-    "click .unassignJobButton":"unassignJobFromDriver"
+    "click .unassignJobButton":"unassignJobFromDriver",
+    "click .phoneButton":"callPhone"
+  },
+  callPhone: function(e) {
+    app.call($(e.target).attr('phone'));
   },
   assignJobToDriver: function(e) {
     var self = this;

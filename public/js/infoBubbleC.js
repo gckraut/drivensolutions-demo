@@ -4,6 +4,7 @@ var InfoBubbleC = Backbone.View.extend({
   },
   callCustomerButton: function() {
     var self = this;
+    app.callCustomerForJob(this.job);
     this.job.set('contactedByContactCenter',true);
     this.job.save().then(function(success) {
       self.setupMarker();

@@ -6,7 +6,7 @@ var ejs = require('ejs');
 app.use(express.logger());
 
 app.get('/', function(request, response) {
-  response.send('Hello World!');
+  response.redirect('index.html');
 });
 
 
@@ -38,8 +38,8 @@ app.listen(port, function() {
   console.log("Listening on " + port);
 });
 
-app.get('/cc', function(req, res) {
- 
+app.get('/getTwilioToken', function(req, res) {
+    var identifier = req.query.id;
     // Create an object which will generate a capability token
     // Replace these two arguments with your own account SID
     // and auth token:
@@ -50,10 +50,13 @@ app.get('/cc', function(req, res) {
  
     // Give the capability generator permission to accept incoming
     // calls to the ID "kevin"
-    capability.allowClientIncoming('cc');
+    capability.allowClientIncoming(identifier);
+
+    capability.allowClientOutgoing('AP52cefad5d73c2f7035f23af96e1b567d');
  
     // Render an HTML page which contains our capability token
-    res.render('index.ejs', {
-        token:capability.generate()
-    });
+    // res.render('token.ejs', {
+    //     token:capability.generate()
+    // });
+  res.send({token:capability.generate()});
 });

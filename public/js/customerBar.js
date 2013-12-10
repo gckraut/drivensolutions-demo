@@ -5,6 +5,10 @@ var CustomerBar = Backbone.View.extend({
   className: "customerBar",
 
   events: {
+    "click .callContactCenterButton":"callContactCenterButton"
+  },
+  callContactCenterButton: function() {
+    app.callContactCenter();
   },
   initialize: function() {
     var self = this;

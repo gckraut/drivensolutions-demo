@@ -9,6 +9,11 @@
   cursor: pointer;
 }
 
+.phoneNumber {
+  cursor: pointer;
+  background-color: gray;
+}
+
 .buttonContainer {
   display: block;
   width: 100%;

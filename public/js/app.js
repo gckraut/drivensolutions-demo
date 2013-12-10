@@ -1,4 +1,31 @@
 var App = Backbone.Model.extend({
+  callContactCenter: function() {
+    this.call('7083772974');
+  },
+  callCustomerForJob: function(job) {
+    var self = this;
+    var jobFetcher = new ObjectFetcher(job);
+    jobFetcher.fetch().then(function(job) {
+      var phoneNumber = job.get('customerUser').get('phone');
+      self.call(phoneNumber);
+    }, function(error) {
+      console.log('error: ' + error);
+    });
+  },
+  call: function(phoneNumber) {
+    Twilio.Device.connect({
+        CallerId:'+17083772974', // Replace this value with a verified Twilio number:
+                                 // https://www.twilio.com/user/account/phone-numbers/verified
+
+        PhoneNumber:phoneNumber //pass in the value of the text field
+    });
+  },
+  setupTwilio: function() {
+    var self = this;
+    $.get( "getTwilioToken?id="+user.id, function( data ) {
+      self.set('twilioToken',data.token);
+    });
+  },
   initialize: function() {
     this.on('change:user', function(model,newValue) {
       if (newValue) {
@@ -9,6 +36,23 @@ var App = Backbone.Model.extend({
       } else {
         this.set('loggedIn',false);
       }
+    });
+    this.on('change:twilioToken', function(model,newValue) {
+      if (!newValue) {
+        return;
+      };
+      Twilio.Device.setup(newValue);
+      Twilio.Device.incoming(function(connection) {
+          //For demo purposed, automatically accept the call
+          connection.accept();
+          //$('p').html('Call in progress...');
+      });
+      Twilio.Device.disconnect(function(connection) {
+          // $('p').html('Awaiting incoming call...');
+      });
+      // $('#hangup').click(function() {
+      //     Twilio.Device.disconnectAll();
+      // });
     });
     if(this.html5_audio()) this.play_html5_audio = true;
   },
@@ -58,6 +102,7 @@ var App = Backbone.Model.extend({
       delete window.driverBar;
       return;
     }
+    this.setupTwilio();
     var typeTest = user.get('type');
     if (typeTest == 'customer') {
       window.customerC = new CustomerC;
@@ -121,7 +166,9 @@ var App = Backbone.Model.extend({
 
     if (this.isServiceCenter()) {
       locations = serviceCenterC.jobMarkers;
-      locations = locations.concat(serviceCenterC.driverMarkers);
+      for (var key in serviceCenterC.driverMarkers) {
+        locations[key] = serviceCenterC.driverMarkers[key];
+      }
     };
 
     if (this.isDriver()) {
