@@ -2,6 +2,16 @@ var App = Backbone.Model.extend({
   callContactCenter: function() {
     this.call('7083772974');
   },
+  callDriverForJob: function(job) {
+    var self = this;
+    var jobFetcher = new ObjectFetcher(job);
+    jobFetcher.fetch().then(function(job) {
+      var phoneNumber = job.get('driverUser').get('phone');
+      self.call(phoneNumber);
+    }, function(error) {
+      console.log('error: ' + error);
+    });
+  },
   callCustomerForJob: function(job) {
     var self = this;
     var jobFetcher = new ObjectFetcher(job);

@@ -30,7 +30,12 @@ var CustomerC = Backbone.Model.extend({
       },5000);
     }, function(error) {
       console.log('It would help to provide your location to the app');
-      
+      setTimeout(function() {
+        if (typeof window.customerC === 'undefined') {
+          return;
+        }
+        customerC.updateLocation();
+      },5000);
     });
     // setTimeout(self.updateLocation.apply(self),9000);
   },
@@ -63,6 +68,7 @@ var CustomerC = Backbone.Model.extend({
   },
      // Cancel a job that has not been dispatched yet
   newService: function(serviceType) {
+    var self = this;
     console.log(serviceType);
     var job = new Job();
     job.set('service',serviceType);
@@ -110,6 +116,27 @@ var CustomerC = Backbone.Model.extend({
     if (!currentJob) {
       return 'Awaiting service request ...';
     };
+    // First see if the driver has arrived, if so, show driver completed work button
+    var driverArrivedTime = currentJob.get('driverArrived');
+    if (driverArrivedTime) {
+      return 'Driver arrived at ' + driverArrivedTime;
+    };
+    // See if a driver was assigned
+    var driver = currentJob.get('driverUser');
+    if (driver) {
+      return 'Driver assigned';
+    };
+    // See if a service center was assigned
+    var serviceCenter = currentJob.get('serviceCenter');
+    if (serviceCenter) {
+      return 'Service Center assigned';
+    };
+    //Change if contacted
+    var contacted = currentJob.get('contactedByContactCenter');
+    if (contacted) {
+      return 'Contacted by Contact Center';
+    };
+    // Fallback on status
     var jobStatus = currentJob.get('status');
     if (jobStatus == 'unassigned') {
       return 'We received your request and will contact you as soon as we can to assist you further.';

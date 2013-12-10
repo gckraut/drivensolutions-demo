@@ -9,6 +9,10 @@ var ServiceRequest = Backbone.View.extend({
     if (!objectID) {
       objectID = $(el.target).parents('[serviceID]').attr('serviceID');
     }
+    if (objectID == 'callCenter') {
+      app.callContactCenter();
+      return;
+    };
     var service = new Service();
     service.id = objectID;
     customerC.newService(service);

@@ -5,7 +5,23 @@ var CustomerBar = Backbone.View.extend({
   className: "customerBar",
 
   events: {
-    "click .callContactCenterButton":"callContactCenterButton"
+    "click .callContactCenterButton":"callContactCenterButton",
+    "click .updateAddressButton":"updateAddressButton",
+    "click .callDriverButton":"callDriverButton"
+  },
+  callDriverButton: function() {
+    var currentJob = customerC.get('currentJob');
+    if (currentJob) {
+      app.callDriverForJob(currentJob);
+    };
+  },
+  updateAddressButton: function() {
+    var field = this.$el.find('.customerAddress');
+    var currentJob = customerC.get('currentJob');
+    if (currentJob) {
+      currentJob.set('address',field.val());
+      currentJob.save();
+    }
   },
   callContactCenterButton: function() {
     app.callContactCenter();
@@ -38,17 +54,20 @@ var CustomerBar = Backbone.View.extend({
     var address = null;
     var serviceProvider = null;
     var driver = null;
+    var driverArrived = null;
     var currentJob = customerC.get('currentJob');
     if (currentJob) {
       address = currentJob.get('address');
       serviceProvider = currentJob.get('serviceProvider');
-      driver = currentJob.get('driver');
+      driver = currentJob.get('driverUser');
+      driverArrived = currentJob.get('driverArrived');
     }
     var data = {
       address: address,
       callServiceProvider: serviceProvider,
       callDriver: driver,
-      status: customerC.status()
+      status: customerC.status(),
+      driverArrived: driverArrived
     };
     loadManager.loadHTML('customerBar.html',data, function(html) {
       self.$el.html(html);
