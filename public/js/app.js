@@ -23,6 +23,11 @@ var App = Backbone.Model.extend({
     });
   },
   call: function(phoneNumber) {
+    if (app.isCustomer()) {
+      window.location = 'tel://'+phoneNumber;
+      return;
+    }
+
     Twilio.Device.connect({
         CallerId:'+17083772974', // Replace this value with a verified Twilio number:
                                  // https://www.twilio.com/user/account/phone-numbers/verified
