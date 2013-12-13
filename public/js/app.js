@@ -1,15 +1,52 @@
 var App = Backbone.Model.extend({
   firebaseBaseURL: 'https://driven.firebaseIO.com/',
+  isValidSnapshot: function(snapshot) {
+    var testDate = new Date(snapshot.val().updatedAt);
+    var now = new Date();
+    if (now - testDate < 10000) {
+      console.log('valid snapshot');
+      return true;
+    } else {
+      console.log('invalid snapshot');
+      return false;
+    }
+  },
   handleNewJobSnapshot: function(snapshot) {
     // Refresh Call Center
+    if (!this.isValidSnapshot(snapshot)) {
+      return;
+    };
+    if (this.isCustomerCenter()) {
+      customerCenterC.getJobs();
+    };
   },
   handleServiceCenterSnapshot: function(snapshot) {
     // Refresh Service Center
+    if (!this.isValidSnapshot(snapshot)) {
+      return;
+    };
+    if (this.isServiceCenter()) {
+      serviceCenterC.getJobs();
+    };
   },
   handleUserSnapshot: function(snapshot) {
     // Refresh Driver
+    if (!this.isValidSnapshot(snapshot)) {
+      return;
+    };
+    if (this.isDriver() && !driverC.get('currentJob')) {
+      if (jobList) {
+        jobList.hide();
+        jobList.render();
+      } else {
+        this.showJobList();
+      }
+    };
   },
   handleJobSnapshot: function(snapshot) {
+    if (!this.isValidSnapshot(snapshot)) {
+      return;
+    };
     // Refresh Customer
     if (this.isCustomer()) {
       var jobFetcher = new ObjectFetcher(customerC.get('currentJob'));
@@ -175,16 +212,19 @@ var App = Backbone.Model.extend({
     if (typeTest == 'customerCenter') {
       window.customerCenterC = new CustomerCenterC();
       window.customerCenterC.set('user',user);
+      this.setupNewJobFirebase();
     }
     if (typeTest == 'serviceCenterRep') {
       window.serviceCenterC = new ServiceCenterC();
       window.serviceCenterC.set('user',user);
       window.serviceCenterC.set('serviceCenter',user.get('serviceCenter'));
+      this.setupServiceCenterFirebase(user.get('serviceCenter'));
     };
     if (typeTest == 'driver') {
       window.driverC = new DriverC();
       window.driverC.set('user',user);
       window.driverBar = new DriverBar();
+      this.setupUserFirebase(user);
     };
     mainNav.render();
   },
