@@ -46,6 +46,7 @@ var CustomerC = Backbone.Model.extend({
     if (job) {
       job.fetch().then(function(fetchedJob) {
         self.set('currentJob',fetchedJob);
+        app.setupJobFirebase(fetchedJob);
       }, function(error) {
         console.log('error getting current job');
         self.checkForCurrentJob();

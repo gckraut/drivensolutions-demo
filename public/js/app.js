@@ -1,4 +1,52 @@
 var App = Backbone.Model.extend({
+  firebaseBaseURL: 'https://driven.firebaseIO.com/',
+  handleNewJobSnapshot: function(snapshot) {
+    // Refresh Call Center
+  },
+  handleServiceCenterSnapshot: function(snapshot) {
+    // Refresh Service Center
+  },
+  handleUserSnapshot: function(snapshot) {
+    // Refresh Driver
+  },
+  handleJobSnapshot: function(snapshot) {
+    // Refresh Customer
+    if (this.isCustomer()) {
+      var jobFetcher = new ObjectFetcher(customerC.get('currentJob'));
+      jobFetcher.fetch().then(function(fetchedJob) {
+        customerC.set('currentJob',fetchedJob);
+      });      
+    };
+
+  },
+  setupNewJobFirebase: function() {
+    var self = this;
+    this.newJobFirebase = new Firebase(this.firebaseBaseURL + 'newJob');
+    this.serviceCenterFirebase.on('child_added', function(snapshot) {
+      self.handleNewJobSnapshot(snapshot);
+    });
+  },
+  setupServiceCenterFirebase: function(serviceCenter) {
+    var self = this;
+    this.serviceCenterFirebase = new Firebase(this.firebaseBaseURL + 'ServiceCenter/'+serviceCenter.id);
+    this.serviceCenterFirebase.on('child_added', function(snapshot) {
+      self.handleServiceCenterSnapshot(snapshot);
+    });
+  },
+  setupUserFirebase: function(user) {
+    var self = this;
+    this.userFirebase = new Firebase(this.firebaseBaseURL + 'User/'+user.id);
+    this.userFirebase.on('child_added', function(snapshot) {
+      self.handleUserSnapshot(snapshot);
+    });
+  },
+  setupJobFirebase: function(job) {
+    var self = this;
+    this.jobFirebase = new Firebase(this.firebaseBaseURL + 'Job/'+job.id);
+    this.jobFirebase.on('child_added', function(snapshot) {
+      self.handleJobSnapshot(snapshot);
+    });
+  },
   callContactCenter: function() {
     this.call('7083772974');
   },
