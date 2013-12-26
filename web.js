@@ -43,16 +43,23 @@ app.get('/getTwilioToken', function(req, res) {
     // Create an object which will generate a capability token
     // Replace these two arguments with your own account SID
     // and auth token:
-    var capability = new twilio.Capability(
-        'AC4f89351042185b1bf4b0e37bc853be88',
-        '8df2133ca1415a4595be15a653188daf'
+    // var capability = new twilio.Capability( // SSI
+    //     'AC4f89351042185b1bf4b0e37bc853be88',
+    //     '8df2133ca1415a4595be15a653188daf'
+    // );
+
+    var capability = new twilio.Capability( // DS
+        'ACc5633470785dd042ef5b09ccaa4f6631',
+        'ad577085cf9c1aeb338233b02adc25db'
     );
+
  
     // Give the capability generator permission to accept incoming
     // calls to the ID "kevin"
     capability.allowClientIncoming(identifier);
 
-    capability.allowClientOutgoing('AP52cefad5d73c2f7035f23af96e1b567d');
+    // capability.allowClientOutgoing('AP52cefad5d73c2f7035f23af96e1b567d'); // SSI
+    capability.allowClientOutgoing('AP64315542699beb3e00b3d3bb44319723'); // DS
  
     // Render an HTML page which contains our capability token
     // res.render('token.ejs', {
