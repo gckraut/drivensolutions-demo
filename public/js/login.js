@@ -3,6 +3,10 @@ var Login = Backbone.View.extend({
   className: "login",
   events: {
     "click .login":"login",
+    "click .loginDriver":"loginDriver"
+  },
+  loginDriver: function() {
+    app.login('vdriver','p');
   },
   login: function() {
     var self = this;
