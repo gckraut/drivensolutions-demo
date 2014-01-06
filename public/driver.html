@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map-canvas { display: block; position: absolute; top: 0px; right: 0px; height: 80%; width: 70%; z-index: 0;}
+    </style>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.css">
+    <link rel="stylesheet" href="css/main.css">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbSW2hxzwURwVngm-pvK0zk9KB7HyTGfs&sensor=false"></script>
+    <script src="js/head.js"></script>
+
+    <script>
+      head.load("http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
+              "http://static.twilio.com/libs/twiliojs/1.1/twilio.min.js",
+              "https://cdn.firebase.com/v0/firebase.js",
+              "js/bootstrap.js",
+              "http://www.parsecdn.com/js/parse-1.2.13.min.js",
+              "js/underscore.js",
+              "js/backbone.js",
+              "js/mustache.js",
+              "js/loadManager.js",
+              "js/mainNav.js",
+              "js/app.js",
+              "js/login.js",
+              "js/serviceRequest.js",
+              "js/assignServiceCenter.js",
+              "js/assignDriver.js",
+              "js/jobList.js",
+              "js/customerC.js",
+              "js/customerBar.js",
+              "js/driverBar.js",
+              "js/customerCenterC.js",
+              "js/serviceCenterC.js",
+              "js/driverC.js",
+              "js/main.js",
+              "js/infoBubble.js",
+              "js/infoBubbleC.js",
+              "js/moment.js");
+    </script>
+  </head>
+  <body>
+    <div id="driverContainer">
+      
+      <div class="driverInfoBar">
+        <p class="currentDateTime"></p>
+        <div class="driverPhoto">
+          <div class="driverPhotoBar">
+            <div class="signOutButton">Sign Out</div>
+          </div>
+        </div>
+        <div class="driverInfo">
+        </div>
+      </div>
+
+      <div id="map-canvas"/>
+    </div>
+    
+    <script>
+    head.ready(function() {
+      function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(41.877773,-87.629614),
+          zoom: 16,
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          disableDefaultUI: true
+        };
+        window.geocoder = new google.maps.Geocoder();
+        window.map = new google.maps.Map(document.getElementById("map-canvas"),
+            mapOptions);
+        app.start();
+      }
+          google.maps.event.addDomListener(window, 'load', initialize);
+      });
+
+
+    </script>
+  </body>
+</html>

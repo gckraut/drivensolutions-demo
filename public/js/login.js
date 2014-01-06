@@ -47,6 +47,10 @@ var Login = Backbone.View.extend({
       this.showMe = true;
     }
     this.$el.find('#loginModal').modal('show');
+    this.$el.find('.loginDriver').click(function() {
+      alert('overridden!');
+      app.login('vdriver','p');
+    });
   },
   hide: function() {
     if (!this.loaded) {
