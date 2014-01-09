@@ -221,6 +221,7 @@ var App = Backbone.Model.extend({
       this.setupServiceCenterFirebase(user.get('serviceCenter'));
     };
     if (typeTest == 'driver') {
+      window.driverCard.render();
       window.driverC = new DriverC();
       window.driverC.set('user',user);
       window.driverBar = new DriverBar();

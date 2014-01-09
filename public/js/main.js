@@ -13,12 +13,19 @@ var Representative = Parse.Object.extend("Car");
 var ServiceCenter = Parse.Object.extend("ServiceCenter");
 var Service = Parse.Object.extend("Service");
 
+
 // Support Models
 var app = new App();
 
 // Views
 var loadManager = new LoadManager();
 var mainNav = new MainNav();
+if (typeof TimeCard !== 'undefined') {
+	var timeCard = new TimeCard();
+};
+if (typeof DriverCard !== 'undefined') {
+	var driverCard = new DriverCard();
+};
 
 // Collections
 var JobCollection = Parse.Collection.extend({

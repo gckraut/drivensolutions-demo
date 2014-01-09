@@ -1,3 +1,61 @@
+
+
+.driverPhoto {
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+.signOutButton {
+  width: 25%;
+  background-color: red;
+  font-size: 16px;
+  height: 70%;
+  padding-top:2px;
+  text-align: center;
+  margin: 7px;
+  right: 0px;
+  position: absolute;
+}
+.driverName {
+  float: left;
+  width: 75%;
+  font-size: 18px;
+  left: 5px;
+  top: 10px;
+  position: relative;
+}
+.driverBar {
+  width: 100%;
+  height: 40px;
+  background-color: rgba(0,0,0,0.25);
+  position: absolute;
+  bottom: 0px;
+}
+.driverCard {
+  position: relative;
+  display: block;
+  color: white;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+}
+.timeCardText {
+  text-align: center;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 14px;
+}
+.leftBar {
+  width: 25%;
+  position: absolute;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  display: block;
+}
 #driverContainer {
   width: 100%;
   height: 100%;
