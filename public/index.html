@@ -16,6 +16,9 @@
     <script src="js/head.js"></script>
 
     <script>
+      if (!!~window.navigator.userAgent.indexOf('SCH-I915')) {
+        window.location = 'http://drivensolutions-demo.herokuapp.com/driver.html';
+      };
       head.load("http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
               "http://static.twilio.com/libs/twiliojs/1.1/twilio.min.js",
               "https://cdn.firebase.com/v0/firebase.js",

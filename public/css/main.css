@@ -1,4 +1,47 @@
+.jobCard {
+  position: relative;
+  display: block;
+  color: white;
+  width: 100%;
+  min-height: 50px;
+  overflow: hidden;
+  background: -webkit-linear-gradient(#325433 0%, #002682 100%);
+  padding: 15px;
+  font-weight: bold;
+  font-size: 20px;
+}
 
+.customerCard .customerCar {
+	float: right;
+}
+
+.customerCard .customerName {
+	float: left;
+}
+
+p.tag {
+	font-weight: bold;
+	font-style: italic;
+	display: block;
+	position: absolute;
+	left: 5px;
+	top: 0px;
+	font-size: 14px;
+	opacity: 0.25;
+}
+
+.customerCard {
+  position: relative;
+  display: block;
+  color: white;
+  width: 100%;
+  min-height: 50px;
+  overflow: hidden;
+  background: -webkit-linear-gradient(#533131 0%, #814700 100%);
+  padding: 15px;
+  font-weight: bold;
+  font-size: 20px;
+}
 
 .driverPhoto {
   width: 100%;

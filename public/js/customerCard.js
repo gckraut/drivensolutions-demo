@@ -7,10 +7,13 @@ var CustomerCard = Backbone.View.extend({
   events: {
   },
 
-  initialize: function(customer) {
+  initialize: function(options) {
     $('.leftBar').append(this.$el);
     this.time = 0;
-    this.customer = customer;
+    this.customer = options.customer;
+    this.car = options.car;
+    console.log(this.customer);
+    this.render();
   },
 
   render: function() {
@@ -18,6 +21,10 @@ var CustomerCard = Backbone.View.extend({
     var data = {};
     if (typeof this.customer !== 'undefined') {
       data = this.customer.toJSON();
+    };
+    if (typeof this.car !== 'undefined') {
+      var car = this.car;
+      data.carInfo = car.get('year') + ' ' + car.get('make') + ' ' + car.get('model');
     };
     loadManager.loadHTML('customerCard.html',data, function(html) {
       self.$el.html(html);

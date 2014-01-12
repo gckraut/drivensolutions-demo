@@ -18,11 +18,27 @@ var DriverC = Backbone.Model.extend({
         model.checkForCurrentJob();
       } else {
         model.updateDirections();
+        self.setupCards();
       }
     });
     this.updateLocation();
     $('body').append('<div class="directions"></div>');
     $('.directions').hide();
+  },
+  setupCards: function() {
+    var job = this.get('currentJob');
+    var customer = job.get('customerUser');
+    var customerCar = job.get('customerCar');
+    if (window.customerCard) {
+      window.customerCard.remove();
+      delete window.customerCard;
+    };
+    window.customerCard = new CustomerCard({customer:customer,car:customerCar});
+    if (window.jobCard) {
+      window.jobCard.remove();
+      delete window.jobCard;
+    };
+    window.jobCard = new JobCard({job:job});
   },
   updateDirections: function() {
     var startingPoint = this.get('currentLocation');
@@ -88,7 +104,10 @@ var DriverC = Backbone.Model.extend({
     var job = user.get('job');
     if (job) {
       job.fetch().then(function(fetchedJob) {
-        self.set('currentJob',fetchedJob);
+        var jobFetcher = new ObjectFetcher(fetchedJob);
+        jobFetcher.fetch().then(function(fullyFetchedJob) {
+          self.set('currentJob',fullyFetchedJob);
+        });
       }, function(error) {
         console.log('error getting current job');
         self.checkForCurrentJob();
