@@ -80,7 +80,7 @@ var JobList = Backbone.View.extend({
     var self = this;
     loadManager.loadHTML('jobList.html',data, function(html) {
       self.$el.html(html);
-      self.modalElem().modal({backdrop:'static',keyboard:false}); // Only if we want someone to be unable to exit the modal
+      self.modalElem().modal(); // Only if we want someone to be unable to exit the modal
       self.loaded = true;
       if (self.hideMe) {
         self.hide();
