@@ -19,7 +19,10 @@ var app = new App();
 
 // Views
 var loadManager = new LoadManager();
-var mainNav = new MainNav();
+if (typeof MainNav !== 'undefined') {
+	var mainNav = new MainNav();	
+};
+
 if (typeof TimeCard !== 'undefined') {
 	var timeCard = new TimeCard();
 };
@@ -58,7 +61,7 @@ serviceCenterCollection.fetch();
 var ObjectFetcher = function(objectToFetch) {
 	this.objectFetchDescription = {
 		"Job":["customerUser","customerCar","serviceCenter","driverUser","service"],
-		"_User":["vehicle"]
+		"_User":["vehicle","serviceCenter"]
 	};
 	this.objectToFetch = objectToFetch;
 	this.fetch = function(objectToFetch) {

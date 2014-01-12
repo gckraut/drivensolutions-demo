@@ -84,6 +84,17 @@ var App = Backbone.Model.extend({
       self.handleJobSnapshot(snapshot);
     });
   },
+  callServiceCenter: function() {
+    var self = this;
+    var getUser = new ObjectFetcher(user);
+    getUser.fetch().then(function(fetchedUser) {
+      var phone = fetchedUser.get('serviceCenter').get('phone');
+      if (phone) {
+        console.log('Phone is ' + phone);
+        self.call(phone);
+      };
+    });
+  },
   callContactCenter: function() {
     this.call('7083772974');
   },
@@ -112,6 +123,10 @@ var App = Backbone.Model.extend({
       window.location = 'tel://'+phoneNumber;
       return;
     }
+    if (typeof window.jsHandler !== 'undefined') {
+      window.jsHandler.placeCall(phoneNumber);
+      return;
+    };
 
     Twilio.Device.connect({
         CallerId:'+17083772974', // Replace this value with a verified Twilio number:
@@ -223,11 +238,13 @@ var App = Backbone.Model.extend({
     if (typeTest == 'driver') {
       window.driverCard.render();
       window.driverC = new DriverC();
+      window.buttonBar = new ButtonBar();
       window.driverC.set('user',user);
-      window.driverBar = new DriverBar();
       this.setupUserFirebase(user);
     };
-    mainNav.render();
+    if (mainNav) {
+      mainNav.render();
+    };
   },
   logout: function() {
     Parse.User.logOut();

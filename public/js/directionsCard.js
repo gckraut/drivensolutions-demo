@@ -1,15 +1,14 @@
-var JobCard = Backbone.View.extend({
+var DirectionsCard = Backbone.View.extend({
 
   tagName: "div",
 
-  className: "jobCard",
+  className: "directionsCard",
 
   events: {
   },
 
   initialize: function(options) {
     $('.leftBar').append(this.$el);
-    this.job = options.job;
     this.render();
   },
 
@@ -22,8 +21,8 @@ var JobCard = Backbone.View.extend({
     };
     console.log('testing');
     console.log(data);
-    loadManager.loadHTML('jobCard.html',data, function(html) {
-      self.$el.html(html);
-    });
+    // loadManager.loadHTML('directionsCard.html',data, function(html) {
+    self.$el.html('<div class="jobCardContainer"><p class="tag">Directions</p><div class="directionsContent"></div></div>');
+    // });
   },
 });

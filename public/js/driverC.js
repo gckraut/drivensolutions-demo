@@ -17,8 +17,8 @@ var DriverC = Backbone.Model.extend({
         model.getJobs();
         model.checkForCurrentJob();
       } else {
-        model.updateDirections();
         self.setupCards();
+        model.updateDirections();
       }
     });
     this.updateLocation();
@@ -39,6 +39,11 @@ var DriverC = Backbone.Model.extend({
       delete window.jobCard;
     };
     window.jobCard = new JobCard({job:job});
+    if (window.directionsCard) {
+      window.directionsCard.remove();
+      delete window.directionsCard;
+    };
+    window.directionsCard = new DirectionsCard();
   },
   updateDirections: function() {
     var startingPoint = this.get('currentLocation');
@@ -56,7 +61,7 @@ var DriverC = Backbone.Model.extend({
       this.directionsDisplay = new google.maps.DirectionsRenderer();
       this.directionsService = new google.maps.DirectionsService();
       this.directionsDisplay.setMap(map);
-      this.directionsDisplay.setPanel($('.directions')[0]);
+      this.directionsDisplay.setPanel($('.directionsContent')[0]);
     };
     var start = startingPoint.latitude + ',' + startingPoint.longitude;
     var end = destination.latitude + ',' + destination.longitude;
@@ -69,7 +74,7 @@ var DriverC = Backbone.Model.extend({
     this.directionsService.route(request, function(response, status) {
       if (status == google.maps.DirectionsStatus.OK) {
         self.directionsDisplay.setDirections(response);
-        $('.directions').show();
+        $('.directionsContent').show();
       }
     });
   },

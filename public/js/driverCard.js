@@ -5,8 +5,11 @@ var DriverCard = Backbone.View.extend({
   className: "driverCard",
 
   events: {
+    "click .signOutButton":"logout"
   },
-
+  logout: function() {
+    app.logout();
+  },
   initialize: function() {
     $('.leftBar').append(this.$el);
     this.time = 0;

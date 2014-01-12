@@ -22,10 +22,10 @@ var TimeCard = Backbone.View.extend({
   },
   updateTime: function() {
     this.time++;
-    this.$el.find('.timeCardText').html(moment().format('MMM Do YYYY, h:mm:ss a'));
+    this.$el.find('.timeCardText').html(moment().format('MMM Do YYYY, h:mm a'));
     var self = this;
     setTimeout(function() {
       self.updateTime();
-    },1000);
+    },10000);
   }
 });
