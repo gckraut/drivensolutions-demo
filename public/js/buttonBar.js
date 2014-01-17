@@ -12,7 +12,8 @@ var ButtonBar = Backbone.View.extend({
   },
   complete: function() {
     driverC.complete();
-    
+    this.$el.find('.completeButton').hide();
+    this.$el.find('.arrivedButton').show();
   },
   arrived: function() {
     driverC.arrived();

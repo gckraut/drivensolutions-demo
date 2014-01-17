@@ -34,6 +34,8 @@ var DriverC = Backbone.Model.extend({
     var self = this;
     var job = this.get('currentJob');
     job.set('status','complete');
+    user.unset('job');
+    user.save();
     job.save().then(function(success) {
       self.unset('currentJob',null);
     }, function(error) {

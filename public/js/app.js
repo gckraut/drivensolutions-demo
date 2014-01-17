@@ -30,17 +30,41 @@ var App = Backbone.Model.extend({
     };
   },
   handleUserSnapshot: function(snapshot) {
+    var self = this;
     // Refresh Driver
     if (!this.isValidSnapshot(snapshot)) {
       return;
     };
-    if (this.isDriver() && !driverC.get('currentJob')) {
-      if (jobList) {
-        jobList.hide();
-        jobList.render();
-      } else {
-        this.showJobList();
-      }
+    if (this.isDriver()) {
+      var driverFetcher = new ObjectFetcher(user);
+      driverFetcher.fetch().then(function(driver) {
+        window.user = driver;
+        var currentJob = driver.get('job');
+        var shouldShowJobList = false;
+        if (currentJob) {
+          var driverCurrentJob = driverC.get('currentJob');
+          if (driverCurrentJob) {
+            if (currentJob.id !== driverCurrentJob.id) {
+              driverC.set('currentJob',currentJob);
+            };
+          } else {
+            shouldShowJobList = true;
+          }
+          
+        } else {
+          shouldShowJobList = true;
+        }
+        if (shouldShowJobList) {
+          if (typeof window.jobList !== 'undefined') {
+            window.jobList.hide();
+            window.jobList.render();
+          } else {
+            self.showJobList();
+          }
+        };
+        
+      });
+      
     };
   },
   handleJobSnapshot: function(snapshot) {
