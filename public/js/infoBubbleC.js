@@ -20,6 +20,16 @@ var InfoBubbleC = Backbone.View.extend({
     this.infoBubble = new InfoBubble({
       maxWidth: 320
     });
+
+    window.oms.addListener('click', function(marker, event) {
+      // iw.setContent(marker.desc);
+      // iw.open(map, marker);
+      infoBubbleC.selectMarker(marker);
+    });
+
+    window.oms.addListener('spiderfy', function(markers) {
+      infoBubbleC.infoBubble.close();
+    });
   },
   selectMarker: function(marker) {
     if (this.infoBubble.isOpen && this.marker != marker) {

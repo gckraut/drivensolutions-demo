@@ -312,9 +312,15 @@ var App = Backbone.Model.extend({
     map.fitBounds(bounds);
   },
   addMarkerListener: function(marker) {
-    google.maps.event.addListener(marker, 'click', function(elem) {
-      infoBubbleC.selectMarker(marker);
-    });
+    oms.addMarker(marker);
+    // window.oms.addListener('click', function(marker, event) {
+    //   // iw.setContent(marker.desc);
+    //   // iw.open(map, marker);
+    //   infoBubbleC.selectMarker(marker);
+    // });
+    // google.maps.event.addListener(marker, 'click', function(elem) {
+    //   infoBubbleC.selectMarker(marker);
+    // });
   },
   isCustomer: function() {
     return typeof customerC != 'undefined';
