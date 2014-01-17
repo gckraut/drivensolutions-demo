@@ -1,3 +1,11 @@
+.completeButton {
+	background: -webkit-linear-gradient(#822754 0%, #b01e2d 100%);
+}
+
+.arrivedButton {
+	background: -webkit-linear-gradient(#1d2fa8 0%, #2d1eb0 100%);
+}
+
 .callServiceCenterButton {
 	background: -webkit-linear-gradient(#778327 0%, #b19b1e 100%);
 }

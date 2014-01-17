@@ -25,6 +25,22 @@ var DriverC = Backbone.Model.extend({
     $('body').append('<div class="directions"></div>');
     $('.directions').hide();
   },
+  arrived: function() {
+    var job = this.get('currentJob');
+    job.set('status','arrived');
+    job.save();
+  },
+  complete: function() {
+    var self = this;
+    var job = this.get('currentJob');
+    job.set('status','complete');
+    job.save().then(function(success) {
+      self.unset('currentJob',null);
+    }, function(error) {
+      console.log('error');
+      app.error('Unable to update job status. Please try again','EC-D-C-1');
+    })
+  },
   setupCards: function() {
     var job = this.get('currentJob');
     var customer = job.get('customerUser');
@@ -46,8 +62,8 @@ var DriverC = Backbone.Model.extend({
     window.directionsCard = new DirectionsCard();
   },
   updateDirections: function() {
-    var startingPoint = this.get('currentLocation');
-    if (!startingPoint) {
+    var startingPoint = user.get('location');//this.get('currentLocation');
+    var completion = function() {
       setTimeout(function() {
         if (typeof window.driverC === 'undefined') {
           return;
@@ -55,7 +71,11 @@ var DriverC = Backbone.Model.extend({
         driverC.updateDirections();
       },5000);
       return;
-    };
+    }
+    if (!startingPoint) {
+      completion();
+      return;
+    }
     var destination = this.get('currentJob').get('location');
     if (!this.directionsDisplay) {
       this.directionsDisplay = new google.maps.DirectionsRenderer();
@@ -76,6 +96,7 @@ var DriverC = Backbone.Model.extend({
         self.directionsDisplay.setDirections(response);
         $('.directionsContent').show();
       }
+      completion();
     });
   },
   updateLocation: function() {
@@ -89,7 +110,9 @@ var DriverC = Backbone.Model.extend({
       user.set('location',geoPoint);
       user.save();
       var newlocation = new google.maps.LatLng(geoPoint.latitude,geoPoint.longitude);
-      map.setCenter(newlocation);
+      if (!self.get('currentJob')) {
+        map.setCenter(newlocation);
+      };
       self.myMarker.setPosition(newlocation);
       setTimeout(function() {
         if (typeof window.driverC === 'undefined') {
@@ -99,7 +122,7 @@ var DriverC = Backbone.Model.extend({
       },5000);
     }, function(error) {
       console.log('It would help to provide your location to the app');
-      
+      app.alert('Cannot get your location. Please let the SnagTow staff know about this issue.','EC-01');
     });
     // setTimeout(self.updateLocation.apply(self),9000);
   },

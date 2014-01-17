@@ -6,7 +6,18 @@ var ButtonBar = Backbone.View.extend({
 
   events: {
     "click .callServiceCenterButton":"callServiceCenter",
-    "click .callCustomerButton":"callCustomer"
+    "click .callCustomerButton":"callCustomer",
+    "click .arrivedButton":"arrived",
+    "click .completeButton":"complete"
+  },
+  complete: function() {
+    driverC.complete();
+    
+  },
+  arrived: function() {
+    driverC.arrived();
+    this.$el.find('.completeButton').show();
+    this.$el.find('.arrivedButton').hide();
   },
   callServiceCenter: function() {
     app.callServiceCenter();
@@ -24,6 +35,7 @@ var ButtonBar = Backbone.View.extend({
     var data = {};
     loadManager.loadHTML('buttonBar.html',data, function(html) {
       self.$el.html(html);
+      self.$el.find('.completeButton').hide();
     });
   },
 });

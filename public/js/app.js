@@ -129,10 +129,10 @@ var App = Backbone.Model.extend({
     };
 
     Twilio.Device.connect({
-        CallerId:'+17083772974', // Replace this value with a verified Twilio number:
+        CallerId:'+17082219579', // Replace this value with a verified Twilio number:
                                  // https://www.twilio.com/user/account/phone-numbers/verified
 
-        PhoneNumber:phoneNumber //pass in the value of the text field
+        Client:phoneNumber //pass in the value of the text field
     });
   },
   setupTwilio: function() {
