@@ -12,7 +12,7 @@
       if (!!~window.navigator.userAgent.indexOf('SCH-I915')) {
         window.location = 'http://drivensolutions-demo.herokuapp.com/driver.html';
       };
-      head.load("http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
+      head.load("http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js",
               "http://code.jquery.com/ui/1.10.4/jquery-ui.js",
               "http://static.twilio.com/libs/twiliojs/1.1/twilio.min.js",
               "https://cdn.firebase.com/v0/firebase.js",
@@ -22,6 +22,7 @@
               "js/mustache.js",
               "js/app.js",
               "js/main.js",
+              "js/login.js",
               "js/infoBubble.js",
               "js/infoBubbleC.js",
               "js/oms.min.js",
@@ -29,11 +30,21 @@
     </script>
   </head>
   <body>
-    <div id="map-canvas"/>
+    <div class="contentContainer">
+      <div class="centeredContent">
+        <img src="img/logo.png" class="logoImage">
+        <form id="loginForm" action="#">
+          <input type="text" class="username">
+          <input type="password" class="password">
+        </form>
+        <div class="loginButton button" value="Login">
+      </div>
+    </div>
     <script>
     head.ready(function() {
       window.app = new App();
-      app.load();
+      window.login = new Login();
+      // app.load();
     });
     </script>
   </body>

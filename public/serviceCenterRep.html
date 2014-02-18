@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en" ng-app="STServiceCenter">
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/STServiceCenter.css">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbSW2hxzwURwVngm-pvK0zk9KB7HyTGfs&sensor=false"></script>
+    <script src="js/head.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+
+    <script>
+      if (!!~window.navigator.userAgent.indexOf('SCH-I915')) {
+        window.location = 'http://drivensolutions-demo.herokuapp.com/driver.html';
+      };
+      head.load("http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
+              "http://code.jquery.com/ui/1.10.4/jquery-ui.js",
+              "http://static.twilio.com/libs/twiliojs/1.1/twilio.min.js",
+              "https://cdn.firebase.com/v0/firebase.js",
+              "http://www.parsecdn.com/js/parse-1.2.13.min.js",
+              "https://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js",
+              "http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js",
+              "js/underscore.js",
+              "js/backbone.js",
+              "js/mustache.js",
+              "js/controllers.js",
+              "js/filters.js",
+              "js/app.js",
+              "js/main.js",
+              "js/serviceRep.js",
+              "js/infoBubble.js",
+              "js/infoBubbleC.js",
+              "js/oms.min.js",
+              "js/moment.js", function() {
+                $(function() {
+                  $("#sectionAccordion").accordion({ heightStyle: "content" });
+                  $('.newJobContainer').hide();
+                });
+              });
+
+    </script>
+  </head>
+  <body ng-controller="STServiceCenterRep">
+    
+    <div id="servicePanel">
+      <div class="buttonContainer">
+        <div class="button addJob" ng-click="openNewJobContainer()">
+          Add Job 
+        </div>
+        <div class="button search">
+          Search
+        </div>
+        <div class="button radioCall">
+          Radio
+        </div>
+        <div class="button logout">
+          Logout
+        </div>
+      </div>
+      <div class="newJobContainer">
+        <form role="form">
+          <div class="form-group">
+            <label for="newJobCustomerName">Customer Name</label>
+            <input type="customerName" class="form-control" id="newJobCustomerName" placeholder="Enter customer name" ng-model="newName">
+          </div>
+          <div class="form-group">
+            <label for="newJobCustomerPhone">Phone Number</label>
+            <input type="customerName" class="form-control" id="newJobCustomerPhone" placeholder="Enter customer phone" ng-model="newPhone">
+          </div>
+          <div class="form-group">
+            <label for="newJobCustomerAddress">Address</label>
+            <div class="input-group">
+              <input type="customerName" class="form-control" id="newJobCustomerAddress" placeholder="Enter customer address" ng-model="newAddress">
+              <span class="input-group-addon" ng-click="locateAddress()">Locate</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" readonly="readonly" disabled="disabled " ng-model="detectedAddress" placeholder="Enter an address above and click 'Locate'">
+          </div>
+          <div class="form-group">
+            <label for="newJobCustomerNotes">Notes</label>
+            <textarea class="form-control" rows="3" id="newJobCustomerNotes" ng-model="newNotes"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="newJobCustomerServiceRequested">Service Requested</label>
+            <select multiple class="form-control" id="newJobCustomerServiceRequested" ng-model="newServices">
+              <option value="T6">T6- Tow</option>
+              <option value="6A">6A- Accident</option>
+              <option value="T1">T1- Tire Change</option>
+              <option value="1A">1A- Air Delivery</option>
+              <option value="T5">T5- Gas Delivery</option>
+              <option value="T8">T8- Winch (stuck in a ditch, curb)</option>
+              <option value="T7">T7- Lockout</option>
+              <option value="3B">3B- Battery Service</option>
+              <option value="T3">T3-Jump start the vehicle</option>
+              <option value="T9">T9- Miscellaneous</option>
+              <option value="6B">6B- Pick Up Vehicle and take to a secondary tow(pay storage fee)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="newJobCustomerKind">Kind</label>
+            <select class="form-control" id="newJobCustomerKind" ng-model="newKind">
+              <option value="AAA">AAA</option>
+              <option value="Cash">Cash</option>
+            </select>
+          </div>
+          <button type="button" class="btn btn-default" ng-click="addCustomer()">Add</button>
+          <button type="button" class="btn btn-default" ng-click="closeNewJobContainer()">Cancel</button>
+        </form>
+      </div>
+      <div id="sectionAccordion">
+        <h3>Jobs</h3>
+        <div class="autoHeight">
+          <div class="btn-group">
+          <button 
+              type="button" 
+              ng-repeat="jobKind in jobKinds" 
+              class="btn btn-default" 
+              ng-model="selected[jobKind]" 
+              btn-checkbox 
+              ng-class="{active: jobKind == selectedJobKind}" 
+              ng-click="setSelectedJobKind(jobKind)">{{jobKind}}</button>
+          </div>
+          <div class="jobListItem" ng-repeat="job in jobs | filter:ShowJobs | orderBy:createdAt" objectId={{job.objectId}}>
+            <div ng-class="{aaaJob: job.kind == 'AAA'}"></div>
+            <p class="jobNumber">{{job.objectId}}</p>
+            <p class="jobEntryTime">{{job.createdAt | JobTime}}</p>
+            <p class="jobName">{{job.name}}</p>
+            <p class="jobType">{{job.services}}</p>
+            <div class="customerDetailTab">
+              <p class="metaTitle">Phone:</p>
+              <p class="jobPhone">{{job.phone}}</p>
+              <p class="metaTitle">Location:</p>
+              <p class="jobAddress" lat="{{job.location.latitude}}" lng="{{job.location.longitude}}">{{job.address}}</p>
+              <p class="metaTitle">Notes:</p>
+              <p class="jobNotes">{{job.notes}}</p>
+              {{job.location | json}}
+            </div>
+          </div>
+        </div>
+        <h3>Drivers</h3>
+        <div class="autoHeight">
+         <div id="driverAccordion">
+          <div ng-repeat="driver in drivers">
+            <h3>{{driver.firstName}} {{driver.lastName}} / heavy service</h3>
+            <div class="jobListItem assignJob" objectId={{driver.objectId}}>
+              Assign Job To {{driver.firstName}} {{driver.lastName}}
+            </div>
+            <div class="jobListItem assignedJob" ng-repeat="job in driver.jobs | orderBy:createdAt" objectId={{job.objectId}}>
+              <div ng-class="{aaaJob: job.kind == 'AAA'}"></div>
+              <p class="jobNumber">{{job.objectId}}</p>
+              <p class="jobEntryTime">{{job.createdAt | JobTime}}</p>
+              <p class="jobName">{{job.name}}</p>
+              <p class="jobType">{{job.services}}</p>
+            </div>
+          </div>
+         </div>
+        </div>
+        <h3>Logs</h3>
+        <div class="autoHeight">
+          <p>
+          Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis.
+          Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero
+          ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis
+          lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.
+          </p>
+          <ul>
+            <li>List item one</li>
+            <li>List item two</li>
+            <li>List item three</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div id="map-canvas">
+    </div>
+    <script>
+    head.ready(function() {
+      window.app = new App();
+      app.load();
+    });
+    </script>
+  </body>
+</html>

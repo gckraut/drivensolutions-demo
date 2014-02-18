@@ -1,61 +1,42 @@
-var Login = Backbone.View.extend({
-  tagName: "div",
-  className: "login",
-  events: {
-    "click .login":"login",
-    "click .loginDriver":"loginDriver"
-  },
-  loginDriver: function() {
-    app.login('vdriver','p');
-  },
-  login: function() {
-    var self = this;
-    var username = this.$el.find('input[type=email]').val();
-    var password = this.$el.find('input[type=password]').val();
-    app.login(username,password);
-  },
-  resetLogin: function() {
-    this.$el.find('input[type=email]').val('');
-    this.$el.find('input[type=password]').val('');
-  },
-  initialize: function() {
-    var self = this;
-    $(document.body).prepend(this.$el);
-    this.render();
-    // console.log('test',app);
-    // app.on('change:loggedIn', function(model) {
-    //   self.render();
-    //   console.log(self);
-    // });
-  },
-  render: function() {
-    var self = this;
-    loadManager.loadHTML('login.html',{}, function(html) {
-      self.$el.html(html);
-      self.$el.find('#loginModal').modal({backdrop:'static',keyboard:false});
-      self.loaded = true;
-      if (self.hideMe) {
-        self.hide();
-      } else if (self.showMe) {
-        self.showMe = false;
-        self.show();
-      }
-    });
-  },
-  show: function() {
-    if (!this.loaded) {
-      this.showMe = true;
-    }
-    this.$el.find('#loginModal').modal('show');
-    this.$el.find('.loginDriver').click(function() {
-      alert('overridden!');
-      app.login('vdriver','p');
-    });
-  },
-  hide: function() {
-    if (!this.loaded) {
-      this.hideMe = true;
-    }
-    this.$el.find('#loginModal').modal('hide');
-  }
-});
+var Login = function() {
+	//Initialize things
+	var self = this;
+	$("input").keypress(function(event) {
+	    if (event.which == 13) {
+	        event.preventDefault();
+	        $("#loginForm").submit();
+	    }
+	});
+	$('.loginButton').click(function() {
+		self.login();
+	});
+	$('#loginForm').submit(function(event) {
+		self.login();
+		event.preventDefault();
+	});
+	this.login = function() {
+		var username = $('.username').val();
+		var password = $('.password').val();
+		Parse.User.logIn(username,password).then(function(user) {
+			self.loginUser(user);
+		},function(error) {
+			app.alert(error);
+		});
+	}
+	this.loginUser = function(loggedInUser) {
+		var page = 'home.html';
+			if (loggedInUser.get('type') == 'driver') {
+				page = 'driver.html';
+			}
+			if (loggedInUser.get('type') == 'serviceCenterRep') {
+				page = 'serviceCenterRep.html';
+			}
+
+			app.log(loggedInUser);
+			window.location = page;
+	}
+	var testLoggedIn = Parse.User.current();
+	if (testLoggedIn) {
+		this.loginUser(testLoggedIn);
+	};
+}

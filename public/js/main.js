@@ -1,3 +1,4 @@
+// Client Specific
 Parse.initialize("9rcthcfnOxz4Hbfn4H5NkvtGvNc5sUg5lkpFTLKf", "Fc1BDycG6UHMCY9tMoYPH0E2zPJT6q7GtnDKRWjL");
 
 // Models
@@ -13,31 +14,18 @@ var Representative = Parse.Object.extend("Car");
 var ServiceCenter = Parse.Object.extend("ServiceCenter");
 var Service = Parse.Object.extend("Service");
 
-
-// Support Models
-var app = new App();
-
-// Views
-var loadManager = new LoadManager();
-if (typeof MainNav !== 'undefined') {
-	var mainNav = new MainNav();	
-};
-
-if (typeof TimeCard !== 'undefined') {
-	var timeCard = new TimeCard();
-};
-if (typeof DriverCard !== 'undefined') {
-	var driverCard = new DriverCard();
-};
-
 // Collections
 var JobCollection = Parse.Collection.extend({
 	model: Job,
 	query: (new Parse.Query(Job)).include("customerUser").include('service')
 });
 
-var jobCollection = new JobCollection();
-jobCollection.fetch();
+var CurrentJobCollection = Parse.Collection.extend({
+	model: Job,
+	query: (new Parse.Query(Job)).equalTo('complete',null)
+});
+
+
 
 var ServiceCenterCollection = Parse.Collection.extend({
 	model: ServiceCenter,
@@ -52,7 +40,7 @@ var DriverCollection = Parse.Collection.extend({
 		modQuery.equalTo('serviceCenter',serviceCenter);
 		this.query = modQuery;
 	},
-	query: (new Parse.Query("User")).include('vehicle').equalTo('type','driver')
+	query: (new Parse.Query("User")).include('vehicle').equalTo('type','driver').include('jobs')
 });
 
 var serviceCenterCollection = new ServiceCenterCollection();

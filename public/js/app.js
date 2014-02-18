@@ -1,4 +1,20 @@
 var App = Backbone.Model.extend({
+  load: function() {
+    function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(41.877773,-87.629614),
+          zoom: 16,
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          disableDefaultUI: true && (Parse.User.current()) ? (Parse.User.current().get('type') == 'driver') : true
+        };
+        window.geocoder = new google.maps.Geocoder();
+        window.map = new google.maps.Map(document.getElementById("map-canvas"),
+            mapOptions);
+        window.oms = new OverlappingMarkerSpiderfier(map);
+        app.start();
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+  },
   firebaseBaseURL: 'https://driven.firebaseIO.com/',
   isValidSnapshot: function(snapshot) {
     var testDate = new Date(snapshot.val().updatedAt);
@@ -231,43 +247,8 @@ var App = Backbone.Model.extend({
   setupUser: function(user) {
     window.user = user;
     this.set('user',user);
-    if (typeof user === 'undefined') {
-      // delete customerC and customerBar / others
-      delete window.customerC;
-      delete window.customerCenterC;
-      delete window.serviceCenterC;
-      delete window.driver;
-      delete window.customerBar;
-      delete window.driverBar;
-      return;
-    }
-    this.setupTwilio();
-    var typeTest = user.get('type');
-    if (typeTest == 'customer') {
-      window.customerC = new CustomerC;
-      window.customerC.set('user',user);
-      window.customerBar = new CustomerBar();
-    }
-    if (typeTest == 'customerCenter') {
-      window.customerCenterC = new CustomerCenterC();
-      window.customerCenterC.set('user',user);
-      this.setupNewJobFirebase();
-    }
-    if (typeTest == 'serviceCenterRep') {
-      window.serviceCenterC = new ServiceCenterC();
-      window.serviceCenterC.set('user',user);
-      window.serviceCenterC.set('serviceCenter',user.get('serviceCenter'));
-      this.setupServiceCenterFirebase(user.get('serviceCenter'));
-    };
-    if (typeTest == 'driver') {
-      window.driverCard.render();
-      window.driverC = new DriverC();
-      window.buttonBar = new ButtonBar();
-      window.driverC.set('user',user);
-      this.setupUserFirebase(user);
-    };
-    if (mainNav) {
-      mainNav.render();
+    if (user.get('type') == 'serviceCenterRep') {
+      app.setupTwilio();
     };
   },
   logout: function() {
@@ -382,6 +363,15 @@ var App = Backbone.Model.extend({
         $('body').append(sound);
     }
   },
+  alert: function(alertInfo) {
+    alert(alertInfo);
+  },
+  log: function(logInfo) {
+    console.log(logInfo);
+  },
+  error: function(errorInfo) {
+    console.error(errorInfo);
+  }
 
 
 });
