@@ -42,6 +42,17 @@
                 $(function() {
                   $("#sectionAccordion").accordion({ heightStyle: "content" });
                   $('.newJobContainer').hide();
+                  $( "#dialog" ).dialog({
+                    autoOpen: false,
+                    show: {
+                      effect: "fade",
+                      duration: 100
+                    },
+                    hide: {
+                      effect: "fade",
+                      duration: 100
+                    }
+                  });
                 });
               });
 
@@ -107,6 +118,7 @@
           <div class="form-group">
             <label for="newJobCustomerKind">Kind</label>
             <select class="form-control" id="newJobCustomerKind" ng-model="newKind">
+              <option value="Account">Account</option>
               <option value="AAA">AAA</option>
               <option value="Cash">Cash</option>
             </select>
@@ -134,15 +146,6 @@
             <p class="jobEntryTime">{{job.createdAt | JobTime}}</p>
             <p class="jobName">{{job.name}}</p>
             <p class="jobType">{{job.services}}</p>
-            <div class="customerDetailTab">
-              <p class="metaTitle">Phone:</p>
-              <p class="jobPhone">{{job.phone}}</p>
-              <p class="metaTitle">Location:</p>
-              <p class="jobAddress" lat="{{job.location.latitude}}" lng="{{job.location.longitude}}">{{job.address}}</p>
-              <p class="metaTitle">Notes:</p>
-              <p class="jobNotes">{{job.notes}}</p>
-              {{job.location | json}}
-            </div>
           </div>
         </div>
         <h3>Drivers</h3>
@@ -163,23 +166,22 @@
           </div>
          </div>
         </div>
-        <h3>Logs</h3>
-        <div class="autoHeight">
-          <p>
-          Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis.
-          Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero
-          ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis
-          lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.
-          </p>
-          <ul>
-            <li>List item one</li>
-            <li>List item two</li>
-            <li>List item three</li>
-          </ul>
-        </div>
       </div>
     </div>
     <div id="map-canvas">
+    </div>
+    <div id="dialog" title="{{selectedJob.name}}">
+      <p class="jobNumber">{{selectedJob.objectId}}</p>
+      <p class="jobEntryTime">{{selectedJob.createdAt | JobTime}}</p>
+      <p class="jobName">{{selectedJob.name}}</p>
+      <p class="jobType">{{selectedJob.services}}</p>
+      <p class="metaTitle">Phone:</p>
+      <p class="jobPhone">{{selectedJob.phone}}</p>
+      <p class="metaTitle">Location:</p>
+      <p class="jobAddress" lat="{{selectedJob.location.latitude}}" lng="{{selectedJob.location.longitude}}">{{selectedJob.address}}</p>
+      <p class="metaTitle">Notes:</p>
+      <p class="jobNotes">{{selectedJob.notes}}</p>
+      {{selectedJob.location | json}}
     </div>
     <script>
     head.ready(function() {

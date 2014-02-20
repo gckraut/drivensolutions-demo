@@ -1,6 +1,7 @@
 var STServiceCenter = angular.module('STServiceCenter',['JobTime']);
  
 STServiceCenter.controller('STServiceCenterRep', function ($scope,$http) {
+  app.setupUserLocationFirebase();
   $scope.setSelectedJobKind = function (value) {
       if ($scope.selectedJobKind === value) {
           $scope.selectedJobKind = undefined;
@@ -10,6 +11,39 @@ STServiceCenter.controller('STServiceCenterRep', function ($scope,$http) {
   };
   $scope.driverCollection = new DriverCollection();
   $scope.driverCollection.setServiceCenter(Parse.User.current().get('serviceCenter'));
+
+  STServiceCenter.setupDriverMarkers = function() {
+    if (STServiceCenter.driverMarkers) {
+      for (var objectId in STServiceCenter.driverMarkers) {
+        var marker = STServiceCenter.driverMarkers[objectId];
+        marker.setMap(null);
+      }
+    };
+    STServiceCenter.driverMarkers = {};
+    var drivers = $scope.driverCollection.toJSON();
+    for (var i = drivers.length - 1; i >= 0; i--) {
+      var driver = drivers[i];
+      var newlocation = new google.maps.LatLng(driver.location.latitude,driver.location.longitude);
+      var driverMarker = new google.maps.Marker({
+        map: map,
+        title: driver.firstName + ' ' + driver.lastName,
+        position: newlocation,
+        icon: 'img/driverMapIcon.png'
+      });
+      STServiceCenter.driverMarkers[driver.objectId] = driverMarker;
+    };
+
+  };
+  STServiceCenter.setupJobMarkers = function() {
+
+  };
+  STServiceCenter.updateJobMarker = function(jobTemp) {
+
+  };
+  STServiceCenter.updateDriverMarker = function(driverTemp) {
+
+  };
+
 
   STServiceCenter.reloadDrivers = function() {
     $scope.driverCollection.fetch().then(function(collection) {
@@ -28,13 +62,13 @@ STServiceCenter.controller('STServiceCenterRep', function ($scope,$http) {
       };
       $scope.drivers = drivers;
       console.log('scope::drivers',$scope.drivers);
+      STServiceCenter.setupDriverMarkers();
       $scope.$apply();
       $('.assignJob').droppable({
         drop: function( event, ui ) {
           var driverId = $(event.target).attr('objectId');
           var jobId = $(event.srcElement).attr('objectId');
           if (!jobId) {
-            window.jobTest = $(event.srcElement);
             jobId = $(event.srcElement).parents('.jobListItem').attr('objectId');
           };
           console.log(driverId,jobId);
@@ -77,9 +111,16 @@ STServiceCenter.controller('STServiceCenterRep', function ($scope,$http) {
           appendTo: 'body'
         });
         $('.jobListItem').click(function(e) {
-          $(this).find('.customerDetailTab').toggle();
+          // $(this).find('.customerDetailTab').toggle();
+          var jobId = $(this).attr('objectId');
+          if (!jobId) {
+            jobId = $(this).parents('.jobListItem').attr('objectId'); //TODO This should be moved to a helper function
+          };
+          $scope.selectedJob = $scope.jobCollection.get(jobId).toJSON();
+          $scope.$apply();
+          $( "#dialog" ).dialog( {title: $scope.selectedJob.name} );
+          $( "#dialog" ).dialog( "open" );
         });
-        $('.customerDetailTab').hide();
         $('.jobPhone').click(function(e) {
           var phone = $(e.target).html();
           app.call(phone);
@@ -94,7 +135,7 @@ STServiceCenter.controller('STServiceCenterRep', function ($scope,$http) {
             return;
           };
           var newLocation = new google.maps.LatLng(lat,lng);
-          map.setCenter(newLocation);
+          map.panTo(newLocation);
         });
 
         console.log('created draggable');
@@ -125,7 +166,7 @@ STServiceCenter.controller('STServiceCenterRep', function ($scope,$http) {
   //    'type': 'out of gas',
   //    'kind':'Cash'}
   // ];
-  $scope.jobKinds = ["All","AAA","Cash"];
+  $scope.jobKinds = ["All","Account","AAA","Cash"];
   $scope.selectedJobKind = 'All';
   $scope.ShowJobs = function(input) {
     console.log(input);

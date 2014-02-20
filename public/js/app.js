@@ -17,9 +17,24 @@ var App = Backbone.Model.extend({
   },
   firebaseBaseURL: 'https://driven.firebaseIO.com/',
   isValidSnapshot: function(snapshot) {
-    var testDate = new Date(snapshot.val().updatedAt);
+    var testDate = snapshot.val().updatedAt;
+    if (!testDate) {
+      var rawVal = snapshot.val();
+      for (childKey in rawVal) {
+        var child = rawVal[childKey];
+        console.log(child);
+        if (child.updatedAt) {
+          if (!testDate) {
+            testDate = child.updatedAt;
+          } else if (testDate < child.updatedAt) {
+            testDate = child.updatedAt;
+          }
+        };
+      }
+    };
+    testDate = new Date(testDate);
     var now = new Date();
-    if (now - testDate < 10000) {
+    if (now - testDate < 20000) {
       console.log('valid snapshot');
       return true;
     } else {
@@ -44,6 +59,14 @@ var App = Backbone.Model.extend({
     if (this.isServiceCenter()) {
       serviceCenterC.getJobs();
     };
+  },
+  handleUserLocationSnapshot: function(snapshot) {
+    var self = this;
+    if (!this.isValidSnapshot(snapshot)) {
+      return;
+    };
+    console.log(snapshot);
+    window.snapshot = snapshot;
   },
   handleUserSnapshot: function(snapshot) {
     var self = this;
@@ -115,6 +138,13 @@ var App = Backbone.Model.extend({
     this.userFirebase = new Firebase(this.firebaseBaseURL + 'User/'+user.id);
     this.userFirebase.on('child_added', function(snapshot) {
       self.handleUserSnapshot(snapshot);
+    });
+  },
+  setupUserLocationFirebase: function() {
+    var self = this;
+    this.userFirebase = new Firebase(this.firebaseBaseURL + 'UserLocation/');
+    this.userFirebase.on('child_added', function(snapshot) {
+      self.handleUserLocationSnapshot(snapshot);
     });
   },
   setupJobFirebase: function(job) {
