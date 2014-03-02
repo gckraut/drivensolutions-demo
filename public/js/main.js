@@ -22,7 +22,7 @@ var JobCollection = Parse.Collection.extend({
 
 var CurrentJobCollection = Parse.Collection.extend({
 	model: Job,
-	query: (new Parse.Query(Job)).equalTo('complete',null)
+	query: (new Parse.Query(Job)).equalTo('complete',null).descending('createdAt')
 });
 
 

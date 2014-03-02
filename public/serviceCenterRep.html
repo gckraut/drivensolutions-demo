@@ -53,6 +53,18 @@
                       duration: 100
                     }
                   });
+                  $( "#driverDialog" ).dialog({
+                    autoOpen: false,
+                    show: {
+                      effect: "fade",
+                      duration: 100
+                    },
+                    hide: {
+                      effect: "fade",
+                      duration: 100
+                    }
+                  });
+                  
                 });
               });
 
@@ -84,6 +96,10 @@
           <div class="form-group">
             <label for="newJobCustomerPhone">Phone Number</label>
             <input type="customerName" class="form-control" id="newJobCustomerPhone" placeholder="Enter customer phone" ng-model="newPhone">
+          </div>
+          <div class="form-group">
+            <label for="newJobCustomerCar">Car Info</label>
+            <input type="customerCar" class="form-control" id="newJobCustomerCar" placeholder="Enter customer car details e.g. 2009 Toyota Corolla" ng-model="newCar">
           </div>
           <div class="form-group">
             <label for="newJobCustomerAddress">Address</label>
@@ -141,9 +157,10 @@
               ng-click="setSelectedJobKind(jobKind)">{{jobKind}}</button>
           </div>
           <div class="jobListItem" ng-repeat="job in jobs | filter:ShowJobs | orderBy:createdAt" objectId={{job.objectId}}>
-            <div ng-class="{aaaJob: job.kind == 'AAA'}"></div>
+            <div ng-class="{aaaJob: job.kind == 'AAA', cashJob: job.kind == 'Cash', accountJob: job.kind == 'Account', completedJob: job.status == 'completed'}"></div>
             <p class="jobNumber">{{job.objectId}}</p>
             <p class="jobEntryTime">{{job.createdAt | JobTime}}</p>
+            <p class="jobStatus">{{job.status}}</p>
             <p class="jobName">{{job.name}}</p>
             <p class="jobType">{{job.services}}</p>
           </div>
@@ -152,7 +169,7 @@
         <div class="autoHeight">
          <div id="driverAccordion">
           <div ng-repeat="driver in drivers">
-            <h3>{{driver.firstName}} {{driver.lastName}} / heavy service</h3>
+            <h3 class="driverNameInList" objectId="{{driver.objectId}}">{{driver.firstName}} {{driver.lastName}} / heavy service</h3>
             <div class="jobListItem assignJob" objectId={{driver.objectId}}>
               Assign Job To {{driver.firstName}} {{driver.lastName}}
             </div>
@@ -171,17 +188,44 @@
     <div id="map-canvas">
     </div>
     <div id="dialog" title="{{selectedJob.name}}">
+      <p class="metaTitle">Job Number:</p>
       <p class="jobNumber">{{selectedJob.objectId}}</p>
-      <p class="jobEntryTime">{{selectedJob.createdAt | JobTime}}</p>
+      <p class="metaTitle">Job Entry Date:</p>
+      <p class="jobEntryTime">{{selectedJob.createdAt}}</p>
+      <p class="metaTitle">Name:</p>
       <p class="jobName">{{selectedJob.name}}</p>
+      <p class="metaTitle">Services:</p>
       <p class="jobType">{{selectedJob.services}}</p>
       <p class="metaTitle">Phone:</p>
       <p class="jobPhone">{{selectedJob.phone}}</p>
+      <p class="metaTitle">Car:</p>
+      <p class="jobCar">{{selectedJob.car}}</p>
       <p class="metaTitle">Location:</p>
       <p class="jobAddress" lat="{{selectedJob.location.latitude}}" lng="{{selectedJob.location.longitude}}">{{selectedJob.address}}</p>
       <p class="metaTitle">Notes:</p>
       <p class="jobNotes">{{selectedJob.notes}}</p>
-      {{selectedJob.location | json}}
+      <p class="metaTitle">Status</p>
+      <p class="jobStatus">{{selectedJob.status}}</p>
+      <p class="metaTitle">Update Status</p>
+      <p class="jobUpdateStatus">
+        <select class="form-control" id="newStatus" ng-model="newStatus" ng-options="option.id as option.title for option in newStatusOptions">
+          <option value="unassigned">Unassigned - No driver assigned</option>
+          <option value="driver">Assign Driver</option>
+          <option value="enroute">Driver is enroute</option>
+          <option value="onlocation">Driver is on Location</option>
+          <option value="completed">Completed - Job is Complete</option>
+        </select>
+        <button type="button" class="btn btn-primary applyStatusUpdate" onclick="javascript:STServiceCenter.applyStatusUpdate();">Apply</button>
+      </p>
+      <p class="hidden">
+        {{selectedJob.location | json}}
+      </p>
+    </div>
+    <div id="driverDialog" title="{{selectedDriver.name}}">
+      <p class="metaTitle">Driver:</p>
+      <p class="driverName">{{selectedDriver.firstName}} {{selectedDriver.lastName}}</p>
+      <br />
+      <button type="button" class="btn btn-primary callSelectedDriver" onclick="javascript:STServiceCenter.callDriver();">Call Driver</button>
     </div>
     <script>
     head.ready(function() {

@@ -3,6 +3,9 @@
  * Small UI
  */
 
+.metaTitle {
+	font-weight: bold;
+}
 
 .customerDetailTab {
 	position: relative;
@@ -23,6 +26,14 @@
 .jobListItem .jobEntryTime {
 	position: absolute;
 	top: 8px;
+	right: 18px;
+	padding: 0px;
+	margin: 0px;
+}
+
+.jobListItem .jobStatus {
+	position: absolute;
+	top: 50px;
 	right: 18px;
 	padding: 0px;
 	margin: 0px;
@@ -84,6 +95,36 @@
 	display: block;
 	width: 8px;
 	background: #e92036;
+	position: absolute;
+	top: 0px;
+	height: 100%;
+	left:0px;
+}
+
+.jobListItem .cashJob {
+	display: block;
+	width: 8px;
+	background: #27e821;
+	position: absolute;
+	top: 0px;
+	height: 100%;
+	left:0px;
+}
+
+.jobListItem .accountJob {
+	display: block;
+	width: 8px;
+	background: #2138e8;
+	position: absolute;
+	top: 0px;
+	height: 100%;
+	left:0px;
+}
+
+.jobListItem .completedJob {
+	display: block;
+	width: 8px;
+	background: #000;
 	position: absolute;
 	top: 0px;
 	height: 100%;

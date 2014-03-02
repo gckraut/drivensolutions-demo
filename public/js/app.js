@@ -1,4 +1,6 @@
 var App = Backbone.Model.extend({
+  userLocationsHandled: [],
+  jobStatusHandled: [],
   load: function() {
     function initialize() {
         var mapOptions = {
@@ -60,13 +62,29 @@ var App = Backbone.Model.extend({
       serviceCenterC.getJobs();
     };
   },
-  handleUserLocationSnapshot: function(snapshot) {
+  handleJobStatusSnapshot: function(snapshot,ref) {
     var self = this;
     if (!this.isValidSnapshot(snapshot)) {
       return;
     };
-    console.log(snapshot);
-    window.snapshot = snapshot;
+    var status = snapshot.val().status;
+    var objectId = snapshot.ref().parent().name();
+    STServiceCenter.updateJobStatus({
+      status: status,
+      objectId: objectId
+    });
+  },
+  handleUserLocationSnapshot: function(snapshot,ref) {
+    var self = this;
+    if (!this.isValidSnapshot(snapshot)) {
+      return;
+    };
+    var location = snapshot.val().location;
+    var objectId = snapshot.ref().parent().name();
+    STServiceCenter.updateDriverMarker({
+      location: location,
+      objectId: objectId
+    });
   },
   handleUserSnapshot: function(snapshot) {
     var self = this;
@@ -140,11 +158,26 @@ var App = Backbone.Model.extend({
       self.handleUserSnapshot(snapshot);
     });
   },
-  setupUserLocationFirebase: function() {
+  setupUserLocationFirebase: function(objectId) {
     var self = this;
-    this.userFirebase = new Firebase(this.firebaseBaseURL + 'UserLocation/');
+    if (this.userLocationsHandled.indexOf(objectId) != -1) {
+      return;
+    };
+    this.userLocationsHandled.push(objectId);
+    this.userFirebase = new Firebase(this.firebaseBaseURL + 'UserLocation/'+objectId+'/');
     this.userFirebase.on('child_added', function(snapshot) {
       self.handleUserLocationSnapshot(snapshot);
+    });
+  },
+  setupJobStatusFirebase: function(objectId) {
+    var self = this;
+    if (this.jobStatusHandled.indexOf(objectId) != -1) {
+      return;
+    };
+    this.jobStatusHandled.push(objectId);
+    this.userFirebase = new Firebase(this.firebaseBaseURL + 'JobStatus/'+objectId+'/');
+    this.userFirebase.on('child_added', function(snapshot) {
+      self.handleJobStatusSnapshot(snapshot);
     });
   },
   setupJobFirebase: function(job) {
