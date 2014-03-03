@@ -165,15 +165,6 @@ p.tag {
   left: 0px;
   display: block;
 }
-#driverContainer {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  top: 0px;
-  left: 0px;
-  display: block;
-  background-color: black;
-}
 
 .serviceButton {
   display: inline-block;

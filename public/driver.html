@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" ng-app="STDriverApp">
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <style type="text/css">
@@ -7,9 +7,8 @@
       body { height: 100%; margin: 0; padding: 0 }
       #map-canvas { display: block; position: absolute; top: 0px; right: 0px; height: 87%; width: 75%; z-index: 0;}
     </style>
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/bootstrap-theme.css">
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/STDriver.css">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbSW2hxzwURwVngm-pvK0zk9KB7HyTGfs&sensor=false"></script>
@@ -19,22 +18,14 @@
       head.load("http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
               "http://static.twilio.com/libs/twiliojs/1.1/twilio.min.js",
               "https://cdn.firebase.com/v0/firebase.js",
-              "js/bootstrap.js",
+              "https://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js",
               "http://www.parsecdn.com/js/parse-1.2.16.min.js",
               "js/underscore.js",
               "js/backbone.js",
               "js/mustache.js",
-              "js/loadManager.js",
               "js/app.js",
+              "js/driverController.js",
               "js/login.js",
-              "js/jobList.js",
-              "js/timeCard.js",
-              "js/driverCard.js",
-              "js/customerCard.js",
-              "js/jobCard.js",
-              "js/directionsCard.js",
-              "js/buttonBar.js",
-              "js/driverC.js",
               "js/main.js",
               "js/infoBubble.js",
               "js/infoBubbleC.js",
@@ -42,34 +33,140 @@
               "js/moment.js");
     </script>
   </head>
-  <body>
-    <div id="driverContainer">
-      
-      <div class="leftBar">
-      </div>
-      <div id="map-canvas"/>
+  <body ng-controller="STDriver">
+    <div id="driverOuterContainer">
+      <div id="driverContainer">
+        <div class="driverJobList">
+          <div class="driverName">{{me.firstName}} {{me.lastName}}</div>
+            <div class="jobScrollContainer">
+              <div class="jobScrollList">
+              <div class="jobContainer" ng-repeat="job in jobs | orderBy:createdAt">
+                <div class="jobInfoContainer">
+                  <div class="infoTitle">
+                    Customer
+                  </div>
+                  <div class="infoData customerName">
+                    {{job.name}}
+                  </div>
+                  <div class="infoSpacer"></div>
+                  <div class="infoTitle">
+                    Car
+                  </div>
+                  <div class="infoData customerName">
+                    {{job.car}}
+                  </div>
+                  <div class="infoSpacer"></div>
+                  <div class="infoTitle">
+                    Service
+                  </div>
+                  <div class="infoData customerName">
+                    {{job.services}}
+                  </div>
+                  <div class="infoSpacer"></div>
+                  <div class="infoTitle">
+                    Address
+                  </div>
+                  <div class="infoData customerName">
+                    {{job.address}}
+                  </div>
+                </div>
+                <div class="jobButtons">
+                  <div class="actionButton callCustomerButton" phoneNumber="{{job.phone}}">
+                    Call Customer
+                  </div>
+                  <div class="actionButton startJobButton" objectId="{{job.objectId}}">
+                    Start Job
+                  </div>
+                </div>
+              </div> <!-- Job Container -->
+            </div>
+            </div>
 
+          <div class="logoutButton">LOG OUT</div>
+        </div>
+
+        <div class="currentJobContainer hidden">
+        
+          <div class="leftBar">
+            <p class="jobInfoText">Job Info</p>
+            <div class="jobInfoContainer">
+              <div class="infoTitle">
+                Customer
+              </div>
+              <div class="infoData customerName">
+                Daniel Slowinski
+              </div>
+              <div class="infoSpacer"></div>
+              <div class="infoTitle">
+                Car
+              </div>
+              <div class="infoData customerName">
+                2014 Toyota Camry
+              </div>
+              <div class="infoSpacer"></div>
+              <div class="infoTitle">
+                Service
+              </div>
+              <div class="infoData customerName">
+                Flat Tire
+              </div>
+              <div class="infoSpacer"></div>
+              <div class="infoTitle">
+                Address
+              </div>
+              <div class="infoData customerName">
+                18-30 W. Congress Pkwy<br>
+                Chicago, IL 60605
+              </div>
+            </div>
+            <div class="actionButton callDispatchButton">Call dispatch</div>
+            <div class="actionButton callCustomerButton">Call customer</div>
+            <div class="actionButton arriveOnSiteButton">arrive on site</div>
+            <div class="actionButton jobCompleteButton">Job complete</div>
+            
+          </div>
+          <div id="mapContainer">
+            
+            <div id="map-canvas"></div>
+            <div class="driverName">{{me.lastName}}</div>
+            <div class="logoutButton">LOGOUT</div>
+            <div class="avatarContainer">
+              <div class="avatarImage"></div>
+            </div>
+            <div class="nextDirection">
+              <div class="icon"></div>
+              <div class="instructionContainer">
+                <div class="instructionText">
+                  Turn right in .25 Miles
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> <!-- End of current Job -->
+      </div>
     </div>
     
     <script>
-    head.ready(function() {
-      function initialize() {
-        var mapOptions = {
-          center: new google.maps.LatLng(41.877773,-87.629614),
-          zoom: 16,
-          mapTypeId: google.maps.MapTypeId.ROADMAP,
-          disableDefaultUI: true
-        };
-        window.geocoder = new google.maps.Geocoder();
-        window.map = new google.maps.Map(document.getElementById("map-canvas"),
-            mapOptions);
-        window.oms = new OverlappingMarkerSpiderfier(map);
-        app.start();
-      }
-          google.maps.event.addDomListener(window, 'load', initialize);
+    // head.ready(function() {
+    //   function initialize() {
+    //     var mapOptions = {
+    //       center: new google.maps.LatLng(41.877773,-87.629614),
+    //       zoom: 16,
+    //       mapTypeId: google.maps.MapTypeId.ROADMAP,
+    //       disableDefaultUI: true
+    //     };
+    //     window.geocoder = new google.maps.Geocoder();
+    //     window.map = new google.maps.Map(document.getElementById("map-canvas"),
+    //         mapOptions);
+    //     window.oms = new OverlappingMarkerSpiderfier(map);
+    //     app.start();
+    //   }
+    //       google.maps.event.addDomListener(window, 'load', initialize);
+    //   });
+      head.ready(function() {
+        window.app = new App();
+        app.load();
       });
-
-
     </script>
   </body>
 </html>

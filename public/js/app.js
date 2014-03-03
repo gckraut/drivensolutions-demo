@@ -92,6 +92,10 @@ var App = Backbone.Model.extend({
     if (!this.isValidSnapshot(snapshot)) {
       return;
     };
+    if (user.get('type') == 'driver') {
+      STDriverApp.refreshJobs();
+      return;
+    };
     if (this.isDriver()) {
       var driverFetcher = new ObjectFetcher(user);
       driverFetcher.fetch().then(function(driver) {
@@ -312,6 +316,11 @@ var App = Backbone.Model.extend({
     this.set('user',user);
     if (user.get('type') == 'serviceCenterRep') {
       app.setupTwilio();
+    };
+    if (user.get('type') == 'driver') {
+      STDriverApp.setupUser();
+      app.setupTwilio();
+      app.setupUserFirebase(user);
     };
   },
   logout: function() {

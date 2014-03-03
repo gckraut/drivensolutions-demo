@@ -25,6 +25,17 @@ var CurrentJobCollection = Parse.Collection.extend({
 	query: (new Parse.Query(Job)).equalTo('complete',null).descending('createdAt')
 });
 
+var DriverJobCollection = Parse.Collection.extend({
+	model: "User"
+});
+
+function jobCollectionForCurrentDriver() {
+	var driverId = user.id;
+	var jobCollection = new DriverJobCollection();
+	jobCollection.query = (new Parse.Query("User")).equalTo('objectId',driverId).include('jobs');
+	return jobCollection;
+}
+
 
 
 var ServiceCenterCollection = Parse.Collection.extend({
