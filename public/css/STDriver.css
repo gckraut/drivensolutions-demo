@@ -247,3 +247,70 @@ p.jobInfoText {
 .hidden {
 	display: none;
 }
+
+.driverAlert {
+		position: fixed;
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		height: 60px;
+		padding-top: 20px;
+		text-align: center;
+		background: darkred;
+		color:white;
+		font-size: 40px;
+		transition: opacity .75s ease-in-out;
+	   -moz-transition: opacity .75s ease-in-out;
+	   -webkit-transition: opacity .75s ease-in-out;
+}
+
+.alertHidden {
+	opacity: 0;
+}
+
+.alertShown {
+	opacity: 1.0;
+}
+
+.driverConfirm {
+	position: fixed;
+	top: 25%;
+	left: 0px;
+	width: 100%;
+	height: 260px;
+	padding-top: 20px;
+	text-align: center;
+	background: #717171;
+	color:white;
+	font-size: 40px;
+	transition: opacity .75s ease-in-out;
+	-moz-transition: opacity .75s ease-in-out;
+	-webkit-transition: opacity .75s ease-in-out;
+
+}
+
+.yesButton {
+	background: darkgreen;
+	height: 80px;
+	width: 80px;
+	color: white;
+	border: 0px;
+	margin: 50px;
+}
+
+.yesButton:active {
+	background: gray;
+}
+
+.noButton {
+	background: darkred;
+	height: 80px;
+	width: 80px;
+	color: white;
+	border: 0px;
+	margin: 50px;
+}
+
+.noButton:active {
+	background: gray;
+}

@@ -5,7 +5,7 @@ var App = Backbone.Model.extend({
     function initialize() {
         var mapOptions = {
           center: new google.maps.LatLng(41.877773,-87.629614),
-          zoom: 16,
+          zoom: 14,
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           disableDefaultUI: true && (Parse.User.current()) ? (Parse.User.current().get('type') == 'driver') : true
         };
@@ -241,6 +241,9 @@ var App = Backbone.Model.extend({
 
         Client:phoneNumber //pass in the value of the text field
     });
+  },
+  hangUp: function() {
+    Twilio.Device.disconnectAll();
   },
   setupTwilio: function() {
     var self = this;

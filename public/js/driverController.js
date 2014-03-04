@@ -2,6 +2,34 @@ var STDriverApp = angular.module('STDriverApp',[]);
  
 STDriverApp.controller('STDriver', function ($scope,$http) {
 
+
+  $('.arriveOnSiteButton').click(function() {
+    STDriverApp.setJobStatus('onlocation');
+  });
+
+  $('.jobCompleteButton').click(function() {
+    STDriverApp.setJobStatus('completed');
+    STDriverApp.showAllJobs();
+  });
+
+  STDriverApp.setJobStatus = function(status) {
+    var job = $scope.selectedJob;
+    var parseJob = new Job();
+    parseJob.id = job.objectId;
+    parseJob.set('status',status);
+    parseJob.save();
+  }
+
+  $('.callDispatchButton').click(function() {
+    if ($(this).html() == 'Hang Up') {
+      app.hangUp();
+      $(this).html('Call Dispatch');
+    } else {
+      app.callServiceCenter();
+      $(this).html('Hang Up');
+    }
+    
+  });
   STDriverApp.setupUser = function() {
     $scope.me = user.toJSON();
     $scope.$apply();
@@ -24,18 +52,81 @@ STDriverApp.controller('STDriver', function ($scope,$http) {
     $scope.jobs = jobsArray;
     $scope.$apply();
     $('.callCustomerButton').click(function(event) {
-      app.call($(this).attr('phoneNumber'));
+      if ($(this).html() == 'Hang Up') {
+        app.hangUp();
+        $(this).html('Call Customer');
+      } else {
+        app.call($(this).attr('phoneNumber'));
+        $(this).html('Hang Up');
+      }
     });
 
     $('.startJobButton').click(function(event) {
       var jobId = $(this).attr('objectId');
-      STDriver.startJob(jobId);
+      STDriverApp.startJob(jobId);
     })
   }
 
   STDriverApp.startJob = function(jobId) {
-
+    var job = _.findWhere($scope.jobs,{objectId: jobId});
+    if (job) {
+      $scope.selectedJob = job;
+      STDriverApp.setJobStatus('enroute');
+      STDriverApp.showCurrentJob();
+      google.maps.event.trigger(map, 'resize');
+      STDriverApp.updateDirections();
+      $scope.$apply();
+    };
   };
+
+  STDriverApp.showAllJobs = function() {
+    $('.driverJobList').show();
+    $('.currentJobContainer').hide();
+  }
+
+  STDriverApp.showCurrentJob = function() {
+    $('.driverJobList').hide();
+    $('.currentJobContainer').show();
+  }
+
+  STDriverApp.displayAlert = function(alertText) {
+    $('.driverAlert').css('display','block');
+    $('.driverAlert').html(alertText);
+    $('.driverAlert').removeClass('alertHidden');
+    setTimeout(function() {
+      $('.driverAlert').addClass('alertHidden');
+      setTimeout(function() {
+        $('.driverAlert').css('display','none');
+      },1000);
+    },4000);
+  }
+
+  STDriverApp.displayConfirmation = function(confirmText,completion) {
+    $('.driverConfirm').find('.confirmQuestion').html(confirmText);
+    $('.driverConfirm').removeClass('alertHidden');
+    STDriverApp.confirmationCompletion = completion;
+  }
+
+  $('.driverConfirm').find('.noButton').click(function() {
+    $('.driverConfirm').css('display','block');
+    if (STDriverApp.confirmationCompletion) {
+      STDriverApp.confirmationCompletion(false);
+    };
+    $('.driverConfirm').addClass('alertHidden');
+    setTimeout(function() {
+      $('.driverConfirm').css('display','none');
+    },1000);
+  });
+  $('.driverConfirm').find('.yesButton').click(function() {
+    if (STDriverApp.confirmationCompletion) {
+      STDriverApp.confirmationCompletion(true);
+    };
+    $('.driverConfirm').addClass('alertHidden');
+    setTimeout(function() {
+      $('.driverConfirm').css('display','none');
+    },1000);
+  });
+
   
   // STServiceCenter.selectJobById = function(jobId) {
   //   $scope.selectedJob = $scope.jobCollection.get(jobId).toJSON();
@@ -516,6 +607,74 @@ STDriverApp.controller('STDriver', function ($scope,$http) {
   //      });
   //    });
   // }
+
+  STDriverApp.updateDirections = function() {
+    var startingPoint = user.get('location');//this.get('currentLocation');
+    var completion = function() {
+      setTimeout(function() {
+        if (typeof user === 'undefined') {
+          return;
+        }
+        STDriverApp.updateDirections();
+      },5000);
+      return;
+    }
+    if (!startingPoint) {
+      completion();
+      return;
+    }
+    var destination = $scope.selectedJob;
+    if (!STDriverApp.directionsDisplay) {
+      STDriverApp.directionsDisplay = new google.maps.DirectionsRenderer();
+      STDriverApp.directionsService = new google.maps.DirectionsService();
+      STDriverApp.directionsDisplay.setMap(map);
+      // STDriverApp.directionsDisplay.setPanel($('.directionsContent')[0]);
+    };
+    var start = startingPoint.latitude + ',' + startingPoint.longitude;
+    var end = destination.latitude + ',' + destination.longitude;
+    var request = {
+      origin: start,
+      destination: end,
+      travelMode: google.maps.TravelMode.DRIVING
+    };
+    STDriverApp.directionsService.route(request, function(response, status) {
+      if (status == google.maps.DirectionsStatus.OK) {
+        STDriverApp.directionsDisplay.setDirections(response);
+        // $('.directionsContent').show();
+      }
+      completion();
+    });
+  },
+  STDriverApp.updateLocation = function() {
+    // var self = this;
+    console.log('getting location');
+    Parse.GeoPoint.current().then(function(geoPoint) {
+      if (typeof user === 'undefined') {
+        return;
+      }
+      // self.set('currentLocation',geoPoint);
+      user.set('location',geoPoint);
+      user.save();
+      var newlocation = new google.maps.LatLng(geoPoint.latitude,geoPoint.longitude);
+      if (true) {
+        map.setCenter(newlocation);
+      };
+      // self.myMarker.setPosition(newlocation);
+      setTimeout(function() {
+        if (typeof window.user === 'undefined') {
+          return;
+        }
+        STDriverApp.updateLocation();
+      },5000);
+    }, function(error) {
+      console.log('It would help to provide your location to the app');
+      app.alert('Cannot get your location. Please let the SnagTow staff know about this issue.','EC-01');
+    });
+    // setTimeout(self.updateLocation.apply(self),9000);
+  }
+
+  STDriverApp.updateLocation();
+
   window.myScope = $scope;
   console.log('OMG');
 });

@@ -69,9 +69,16 @@
                   <div class="infoData customerName">
                     {{job.address}}
                   </div>
+                  <div class="infoSpacer"></div>
+                  <div class="infoTitle">
+                    Notes
+                  </div>
+                  <div class="infoData customerName">
+                    {{job.notes}}
+                  </div>
                 </div>
                 <div class="jobButtons">
-                  <div class="actionButton callCustomerButton" phoneNumber="{{job.phone}}">
+                  <div class="actionButton callCustomerButton callButton" phoneNumber="{{job.phone}}">
                     Call Customer
                   </div>
                   <div class="actionButton startJobButton" objectId="{{job.objectId}}">
@@ -81,7 +88,6 @@
               </div> <!-- Job Container -->
             </div>
             </div>
-
           <div class="logoutButton">LOG OUT</div>
         </div>
 
@@ -94,42 +100,47 @@
                 Customer
               </div>
               <div class="infoData customerName">
-                Daniel Slowinski
+                {{selectedJob.name}}
               </div>
               <div class="infoSpacer"></div>
               <div class="infoTitle">
                 Car
               </div>
               <div class="infoData customerName">
-                2014 Toyota Camry
+                {{selectedJob.car}}
               </div>
               <div class="infoSpacer"></div>
               <div class="infoTitle">
                 Service
               </div>
               <div class="infoData customerName">
-                Flat Tire
+                {{selectedJob.services}}
               </div>
               <div class="infoSpacer"></div>
               <div class="infoTitle">
                 Address
               </div>
               <div class="infoData customerName">
-                18-30 W. Congress Pkwy<br>
-                Chicago, IL 60605
+                {{selectedJob.address}}
+              </div>
+              <div class="infoSpacer"></div>
+              <div class="infoTitle">
+                Notes
+              </div>
+              <div class="infoData customerName">
+                {{selectedJob.notes}}
               </div>
             </div>
-            <div class="actionButton callDispatchButton">Call dispatch</div>
-            <div class="actionButton callCustomerButton">Call customer</div>
-            <div class="actionButton arriveOnSiteButton">arrive on site</div>
+            <div class="actionButton callDispatchButton callButton">Call dispatch</div>
+            <div class="actionButton callCustomerButton callButton" phoneNumber="{{selectedJob.phone}}">Call customer</div>
+            <div class="actionButton arriveOnSiteButton">Arrived</div>
             <div class="actionButton jobCompleteButton">Job complete</div>
             
           </div>
           <div id="mapContainer">
             
             <div id="map-canvas"></div>
-            <div class="driverName">{{me.lastName}}</div>
-            <div class="logoutButton">LOGOUT</div>
+            <div class="driverName">{{me.firstName}} {{me.lastName}}</div>
             <div class="avatarContainer">
               <div class="avatarImage"></div>
             </div>
@@ -137,12 +148,24 @@
               <div class="icon"></div>
               <div class="instructionContainer">
                 <div class="instructionText">
-                  Turn right in .25 Miles
+                  {{currentDirection}}
                 </div>
               </div>
             </div>
           </div>
         </div> <!-- End of current Job -->
+      </div>
+      <div class="driverAlert alertHidden">
+        
+      </div>
+
+      <div class="driverConfirm alertHidden">
+        <div class="confirmQuestion">
+          
+        </div>
+        <button class="noButton">No</button>
+        <button class="yesButton">Yes</button>
+        
       </div>
     </div>
     
