@@ -2,6 +2,25 @@ var STDriverApp = angular.module('STDriverApp',[]);
  
 STDriverApp.controller('STDriver', function ($scope,$http) {
 
+  STDriverApp.lastCallButton = null;
+  STDriverApp.lastCallHTML = null;
+
+  STDriverApp.acceptCall = function(conn) {
+    STDriverApp.lastCallButton.html('Hang Up');
+  };
+
+  STDriverApp.disconnectCall = function(conn) {
+    STDriverApp.lastCallButton.html(STDriverApp.lastCallHTML);
+  };
+
+  /* BUG FIXES */
+
+  $('.logoutButton').click(function() {
+    location.href = 'logout.html';
+  });
+
+  /* /BUG FIXES */
+
 
   $('.arriveOnSiteButton').click(function() {
     STDriverApp.setJobStatus('onlocation');
@@ -21,12 +40,14 @@ STDriverApp.controller('STDriver', function ($scope,$http) {
   }
 
   $('.callDispatchButton').click(function() {
+    STDriverApp.lastCallButton = $('.callDispatchButton');
+    STDriverApp.lastCallHTML = 'Call Dispatch';
     if ($(this).html() == 'Hang Up') {
       app.hangUp();
       $(this).html('Call Dispatch');
     } else {
       app.callServiceCenter();
-      $(this).html('Hang Up');
+      
     }
     
   });
@@ -47,17 +68,21 @@ STDriverApp.controller('STDriver', function ($scope,$http) {
     $scope.rawJobs = $scope.driverCollection.at(0).get('jobs');
     var jobsArray = [];
     for (var i = $scope.rawJobs.length - 1; i >= 0; i--) {
-      jobsArray.push($scope.rawJobs[i].toJSON());
+      var jobJSON = $scope.rawJobs[i].toJSON();
+      if (jobJSON.status == 'completed') {
+        continue;
+      };
+      jobsArray.push(jobJSON);
     };
     $scope.jobs = jobsArray;
     $scope.$apply();
     $('.callCustomerButton').click(function(event) {
+      STDriverApp.lastCallButton = $('.callCustomerButton');
+      STDriverApp.lastCallHTML = 'Call Customer';
       if ($(this).html() == 'Hang Up') {
         app.hangUp();
-        $(this).html('Call Customer');
       } else {
         app.call($(this).attr('phoneNumber'));
-        $(this).html('Hang Up');
       }
     });
 

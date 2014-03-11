@@ -2,6 +2,14 @@ var STServiceCenter = angular.module('STServiceCenter',['JobTime']);
  
 STServiceCenter.controller('STServiceCenterRep', function ($scope,$http) {
 
+  /* BUG FIXES */
+
+  $('.logout').click(function() {
+    location.href = 'logout.html';
+  });
+
+  /* /BUG FIXES */
+
   STServiceCenter.selectJobById = function(jobId) {
     $scope.selectedJob = $scope.jobCollection.get(jobId).toJSON();
 
@@ -144,6 +152,7 @@ STServiceCenter.controller('STServiceCenterRep', function ($scope,$http) {
       });
     };
     tempJob.set('status',newStatus);
+    $scope.selectedJob.status = newStatus;
     tempJob.save().then(function(success) {
       STServiceCenter.updateJobStatus({
         objectId: tempJob.objectId,
@@ -169,6 +178,9 @@ STServiceCenter.controller('STServiceCenterRep', function ($scope,$http) {
     for (var i = jobs.length - 1; i >= 0; i--) {
       var job = jobs[i];
       if (!job.location) {
+        continue;
+      };
+      if (job.status == 'completed') {
         continue;
       };
       var newLocation = new google.maps.LatLng(job.location.latitude,job.location.longitude);
@@ -247,6 +259,12 @@ STServiceCenter.controller('STServiceCenterRep', function ($scope,$http) {
           driver.jobs = [];
           var jobs = rawDriver.get('jobs');
           for (var j = 0; j < jobs.length; j++) {
+            if (!jobs[j]) {
+              continue;
+            };
+            if (jobs[j].get('status') == 'completed') {
+              continue;
+            };
             driver.jobs.push(jobs[j].toJSON());
           };
         };

@@ -269,10 +269,22 @@ var App = Backbone.Model.extend({
       Twilio.Device.setup(newValue);
       Twilio.Device.incoming(function(connection) {
           //For demo purposed, automatically accept the call
-          connection.accept();
+          connection.accept(function(conn) {
+            if (STDriverApp != null) {
+              STDriverApp.acceptCall(conn);
+            };
+          });
           //$('p').html('Call in progress...');
       });
+      Twilio.Device.connect(function(conn) {
+        if (STDriverApp != null) {
+            STDriverApp.acceptCall(conn);
+          };
+      });
       Twilio.Device.disconnect(function(connection) {
+        if (STDriverApp != null) {
+          STDriverApp.disconnectCall(connection);
+        };
           // $('p').html('Awaiting incoming call...');
       });
       // $('#hangup').click(function() {
