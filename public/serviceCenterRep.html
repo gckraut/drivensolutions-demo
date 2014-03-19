@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en" ng-app="STServiceCenter">
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/STServiceCenter.css">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbSW2hxzwURwVngm-pvK0zk9KB7HyTGfs&sensor=false"></script>
+    <script src="js/head.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+
+    <script>
+      if (!!~window.navigator.userAgent.indexOf('SCH-I915')) {
+        window.location = 'http://drivensolutions-demo.herokuapp.com/driver.html';
+      };
+      head.load("http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
+              "http://code.jquery.com/ui/1.10.4/jquery-ui.js",
+              "http://static.twilio.com/libs/twiliojs/1.1/twilio.min.js",
+              "https://cdn.firebase.com/v0/firebase.js",
+              "http://www.parsecdn.com/js/parse-1.2.13.min.js",
+              "https://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js",
+              "http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js",
+              "js/underscore.js",
+              "js/backbone.js",
+              "js/mustache.js",
+              "js/controllers.js",
+              "js/filters.js",
+              "js/app.js",
+              "js/main.js",
+              "js/serviceRep.js",
+              "js/infoBubble.js",
+              "js/infoBubbleC.js",
+              "js/oms.min.js",
+              "js/moment.js", function() {
+                $(function() {
+                  $("#sectionAccordion").accordion({ heightStyle: "content" });
+                  $('.newJobContainer').hide();
+                  $( "#dialog" ).dialog({
+                    autoOpen: false,
+                    show: {
+                      effect: "fade",
+                      duration: 100
+                    },
+                    hide: {
+                      effect: "fade",
+                      duration: 100
+                    }
+                  });
+                  $( "#driverDialog" ).dialog({
+                    autoOpen: false,
+                    show: {
+                      effect: "fade",
+                      duration: 100
+                    },
+                    hide: {
+                      effect: "fade",
+                      duration: 100
+                    }
+                  });
+                  
+                });
+              });
+
+    </script>
+  </head>
+  <body ng-controller="STServiceCenterRep">
+    
+    <div id="servicePanel">
+      <div class="buttonContainer">
+        <div class="button addJob" ng-click="openNewJobContainer()">
+          Add Job 
+        </div>
+        <div class="button search">
+          Search
+        </div>
+        <div class="button radioCall">
+          Radio
+        </div>
+        <div class="button logout">
+          Logout
+        </div>
+      </div>
+      <div class="newJobContainer">
+        <form role="form">
+          <div class="form-group">
+            <label for="newJobCustomerName">Customer Name</label>
+            <input type="customerName" class="form-control" id="newJobCustomerName" placeholder="Enter customer name" ng-model="newName">
+          </div>
+          <div class="form-group">
+            <label for="newJobCustomerPhone">Phone Number</label>
+            <input type="customerName" class="form-control" id="newJobCustomerPhone" placeholder="Enter customer phone" ng-model="newPhone">
+          </div>
+          <div class="form-group">
+            <label for="newJobCustomerCar">Car Info</label>
+            <input type="customerCar" class="form-control" id="newJobCustomerCar" placeholder="Enter customer car details e.g. 2009 Toyota Corolla" ng-model="newCar">
+          </div>
+          <div class="form-group">
+            <label for="newJobCustomerAddress">Address</label>
+            <div class="input-group">
+              <input type="customerName" class="form-control" id="newJobCustomerAddress" placeholder="Enter customer address" ng-model="newAddress">
+              <span class="input-group-addon" ng-click="locateAddress()">Locate</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" readonly="readonly" disabled="disabled " ng-model="detectedAddress" placeholder="Enter an address above and click 'Locate'">
+          </div>
+          <div class="form-group">
+            <label for="newJobCustomerNotes">Notes</label>
+            <textarea class="form-control" rows="3" id="newJobCustomerNotes" ng-model="newNotes"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="newJobCustomerServiceRequested">Service Requested</label>
+            <select multiple class="form-control" id="newJobCustomerServiceRequested" ng-model="newServices">
+              <option value="T6">T6- Tow</option>
+              <option value="6A">6A- Accident</option>
+              <option value="T1">T1- Tire Change</option>
+              <option value="1A">1A- Air Delivery</option>
+              <option value="T5">T5- Gas Delivery</option>
+              <option value="T8">T8- Winch (stuck in a ditch, curb)</option>
+              <option value="T7">T7- Lockout</option>
+              <option value="3B">3B- Battery Service</option>
+              <option value="T3">T3-Jump start the vehicle</option>
+              <option value="T9">T9- Miscellaneous</option>
+              <option value="6B">6B- Pick Up Vehicle and take to a secondary tow(pay storage fee)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="newJobCustomerKind">Kind</label>
+            <select class="form-control" id="newJobCustomerKind" ng-model="newKind">
+              <option value="Account">Account</option>
+              <option value="AAA">AAA</option>
+              <option value="Cash">Cash</option>
+            </select>
+          </div>
+          <button type="button" class="btn btn-default" ng-click="addCustomer()">Add</button>
+          <button type="button" class="btn btn-default" ng-click="closeNewJobContainer()">Cancel</button>
+        </form>
+      </div>
+      <div id="sectionAccordion">
+        <h3>Jobs</h3>
+        <div class="autoHeight">
+          <div class="btn-group">
+          <button 
+              type="button" 
+              ng-repeat="jobKind in jobKinds" 
+              class="btn btn-default" 
+              ng-model="selected[jobKind]" 
+              btn-checkbox 
+              ng-class="{active: jobKind == selectedJobKind}" 
+              ng-click="setSelectedJobKind(jobKind)">{{jobKind}}</button>
+          </div>
+          <div class="jobListItem" ng-repeat="job in jobs | filter:ShowJobs | orderBy:createdAt" objectId={{job.objectId}}>
+            <div ng-class="{aaaJob: job.kind == 'AAA', cashJob: job.kind == 'Cash', accountJob: job.kind == 'Account', completedJob: job.status == 'completed'}"></div>
+            <p class="jobNumber">{{job.objectId}}</p>
+            <p class="jobEntryTime">{{job.createdAt | JobTime}}</p>
+            <p class="jobStatus">{{job.status}}</p>
+            <p class="jobName">{{job.name}}</p>
+            <p class="jobType">{{job.services}}</p>
+          </div>
+        </div>
+        <h3>Drivers</h3>
+        <div class="autoHeight">
+         <div id="driverAccordion">
+          <div ng-repeat="driver in drivers">
+            <h3 class="driverNameInList" objectId="{{driver.objectId}}">{{driver.firstName}} {{driver.lastName}} / heavy service</h3>
+            <div class="jobListItem assignJob" objectId={{driver.objectId}}>
+              Assign Job To {{driver.firstName}} {{driver.lastName}}
+            </div>
+            <div class="jobListItem assignedJob" ng-repeat="job in driver.jobs | orderBy:createdAt" objectId={{job.objectId}}>
+              <div ng-class="{aaaJob: job.kind == 'AAA'}"></div>
+              <p class="jobNumber">{{job.objectId}}</p>
+              <p class="jobEntryTime">{{job.createdAt | JobTime}}</p>
+              <p class="jobStatus">{{job.status}}</p>
+              <p class="jobName">{{job.name}}</p>
+              <p class="jobType">{{job.services}}</p>
+            </div>
+          </div>
+         </div>
+        </div>
+      </div>
+    </div>
+    <div id="map-canvas">
+    </div>
+    <div id="dialog" title="{{selectedJob.name}}">
+      <p class="metaTitle">Job Number:</p>
+      <p class="jobNumber">{{selectedJob.objectId}}</p>
+      <p class="metaTitle">Job Entry Date:</p>
+      <p class="jobEntryTime">{{selectedJob.createdAt}}</p>
+      <p class="metaTitle">Name:</p>
+      <p class="jobName">{{selectedJob.name}}</p>
+      <p class="metaTitle">Services:</p>
+      <p class="jobType">{{selectedJob.services}}</p>
+      <p class="metaTitle">Phone:</p>
+      <p class="jobPhone">{{selectedJob.phone}}</p>
+      <p class="metaTitle">Car:</p>
+      <p class="jobCar">{{selectedJob.car}}</p>
+      <p class="metaTitle">Location:</p>
+      <p class="jobAddress" lat="{{selectedJob.location.latitude}}" lng="{{selectedJob.location.longitude}}">{{selectedJob.address}}</p>
+      <p class="metaTitle">Notes:</p>
+      <p class="jobNotes">{{selectedJob.notes}}</p>
+      <p class="metaTitle">Status</p>
+      <p class="jobStatus">{{selectedJob.status}}</p>
+      <p class="metaTitle">Update Status</p>
+      <p class="jobUpdateStatus">
+        <select class="form-control" id="newStatus" ng-model="newStatus" ng-options="option.id as option.title for option in newStatusOptions">
+          <option value="unassigned">Unassigned - No driver assigned</option>
+          <option value="driver">Assign Driver</option>
+          <option value="enroute">Driver is enroute</option>
+          <option value="onlocation">Driver is on Location</option>
+          <option value="completed">Completed - Job is Complete</option>
+        </select>
+        <button type="button" class="btn btn-primary applyStatusUpdate" onclick="javascript:STServiceCenter.applyStatusUpdate();">Apply</button>
+      </p>
+      <p class="hidden">
+        {{selectedJob.location | json}}
+      </p>
+    </div>
+    <div id="driverDialog" title="{{selectedDriver.name}}">
+      <p class="metaTitle">Driver:</p>
+      <p class="driverName">{{selectedDriver.firstName}} {{selectedDriver.lastName}}</p>
+      <br />
+      <button type="button" class="btn btn-primary callSelectedDriver" onclick="javascript:STServiceCenter.callDriver();">Call Driver</button>
+    </div>
+    <script>
+    head.ready(function() {
+      window.app = new App();
+      app.load();
+    });
+    </script>
+  </body>
+</html>

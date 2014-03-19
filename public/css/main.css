@@ -1,0 +1,291 @@
+.completeButton {
+	background: -webkit-linear-gradient(#822754 0%, #b01e2d 100%);
+}
+
+.arrivedButton {
+	background: -webkit-linear-gradient(#1d2fa8 0%, #2d1eb0 100%);
+}
+
+.callServiceCenterButton {
+	background: -webkit-linear-gradient(#778327 0%, #b19b1e 100%);
+}
+
+.callCustomerButton {
+	background: -webkit-linear-gradient(#13ab3f 0%, #05641f 100%);
+}
+
+.buttonBar .button {
+	display: block;
+	width: 300px;
+	height: 90%;
+	margin-left: 100px;
+	vertical-align: middle;	
+	color: white;
+	padding: 25px;
+	float: left;
+	margin-top: 25px;
+	text-align: center;
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.buttonBar {
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+	width: 75%;
+	height: 13%;
+}
+.directionsContent {
+	margin-top: 15px;
+	background: white;
+	overflow: scroll;
+}
+
+.directionsCard {
+  position: relative;
+  display: block;
+  color: white;
+  width: 100%;
+  min-height: 50px;
+  overflow: hidden;
+  background: -webkit-linear-gradient(rgba(28,102,121,0.18) 0%, rgba(130,109,0,0.27) 100%);
+  padding: 15px;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.jobCard {
+  position: relative;
+  display: block;
+  color: white;
+  width: 100%;
+  min-height: 50px;
+  overflow: hidden;
+  background: -webkit-linear-gradient(rgba(50,85,52,0.35) 0%, rgba(0,40,130,0.44) 100%);
+  padding: 15px;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.customerCard .customerCar {
+	float: right;
+}
+
+.customerCard .customerName {
+	float: left;
+}
+
+p.tag {
+	font-weight: bold;
+	font-style: italic;
+	display: block;
+	position: absolute;
+	left: 5px;
+	top: 0px;
+	font-size: 14px;
+	opacity: 0.25;
+	color: white;
+}
+
+.customerCard {
+  position: relative;
+  display: block;
+  color: white;
+  width: 100%;
+  min-height: 50px;
+  overflow: hidden;
+  background: -webkit-linear-gradient(rgba(84,50,50,0.36) 0%, rgba(130,72,0,0.42) 100%);
+  padding: 15px;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.driverPhoto {
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+.signOutButton {
+  width: 25%;
+  background-color: red;
+  font-size: 16px;
+  height: 70%;
+  padding-top:2px;
+  text-align: center;
+  margin: 7px;
+  right: 0px;
+  position: absolute;
+}
+.driverName {
+  float: left;
+  width: 75%;
+  font-size: 18px;
+  left: 5px;
+  top: 10px;
+  position: relative;
+}
+.driverBar {
+  width: 100%;
+  height: 40px;
+  background-color: rgba(0,0,0,0.25);
+  position: absolute;
+  bottom: 0px;
+}
+.driverCard {
+  position: relative;
+  display: block;
+  color: white;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+}
+.timeCardText {
+  text-align: center;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding-top: 10px;
+}
+.timeCard {
+	position: fixed;
+	z-index: 200;
+	background: rgba(0,0,0,0.5);
+	display: block;
+	width: 25%;
+}
+.leftBar {
+  width: 25%;
+  position: absolute;
+  height: 100%;
+  overflow: scroll;
+  top: 0px;
+  left: 0px;
+  display: block;
+}
+
+.serviceButton {
+  display: inline-block;
+  position: relative;
+  margin: 12px;
+  width: 100px;
+  height: 130px;
+  float: left;
+  text-align: center;
+  cursor: pointer;
+}
+
+.phoneNumber {
+  cursor: pointer;
+  background-color: gray;
+}
+
+.buttonContainer {
+  display: block;
+  width: 100%;
+}
+
+.customerBar {
+  position: absolute;
+  width: 100%;
+}
+
+.driverBar {
+  position: absolute;
+  width: 100%;
+}
+
+.modal.modal-wide .modal-dialog {
+  width: 90%;
+}
+.modal-wide .modal-body {
+  overflow-y: auto;
+}
+
+.directions-panel {
+  height: 100%;
+  float: right;
+  width: 390px;
+  overflow: auto;
+}
+
+.directions {
+  position: absolute;
+  width: 25%;
+  height: 100%;
+  margin-top: 144px;
+  top:0px;
+  right:0px;
+  background-color: white;
+}
+
+#Use this CSS
+
+html { height: 100% }
+body { height: 100%; margin: 0; padding: 0; background:#363636; font-family:'Lucida Grande';}
+#map-canvas { display: block; position: absolute; top: 0px; left: 0px; height: 100%; width: 100%; z-index: 1;}
+
+.username {
+	width: 446px;
+	font-size: 24px;
+	padding: 10px 10px 10px 50px;
+	border-radius: 10px;
+	background: url(../img/usernameText.png) no-repeat white;
+	background-size: auto 100%;
+	margin-top: 25px;
+}
+
+.loginButton {
+	background: #00B5D1;
+	width: 100%;
+	height: 50px;
+	display: block;
+	margin-top: 25px;
+}
+
+.loginButton:after {
+	content: attr(value);
+	text-align: center;
+	color: white;
+	font-size: 34px;
+	font-weight: bold;
+	line-height: 1.5;
+	width: 100%;
+	position: absolute;
+}
+
+.button {
+	border-radius: 10px;
+	font-family:'Lucida Grande';
+	text-transform: uppercase;
+}
+
+.password {
+	width: 446px;
+	font-size: 24px;
+	padding: 10px 10px 10px 50px;
+	border-radius: 10px;
+	background: url(../img/passwordText.png) no-repeat white;
+	background-size: auto 100%;
+	margin-top: 25px;
+}
+
+.logoImage {
+	width: 509px;
+}
+
+.centeredContent {
+  position: relative;
+
+}
+
+.contentContainer {
+  height: 645px;
+  width: 509px;
+  overflow: auto;
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+}

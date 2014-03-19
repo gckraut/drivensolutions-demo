@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="css/main.css">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbSW2hxzwURwVngm-pvK0zk9KB7HyTGfs&sensor=false"></script>
+    <script src="js/head.js"></script>
+
+    <script>
+      if (!!~window.navigator.userAgent.indexOf('SCH-I915')) {
+        window.location = 'http://drivensolutions-demo.herokuapp.com/driver.html';
+      };
+      head.load("http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js",
+              "http://code.jquery.com/ui/1.10.4/jquery-ui.js",
+              "http://static.twilio.com/libs/twiliojs/1.1/twilio.min.js",
+              "https://cdn.firebase.com/v0/firebase.js",
+              "http://www.parsecdn.com/js/parse-1.2.13.min.js",
+              "js/underscore.js",
+              "js/backbone.js",
+              "js/mustache.js",
+              "js/app.js",
+              "js/main.js",
+              "js/login.js",
+              "js/infoBubble.js",
+              "js/infoBubbleC.js",
+              "js/oms.min.js",
+              "js/moment.js");
+    </script>
+  </head>
+  <body>
+    <div class="contentContainer">
+      <div class="centeredContent">
+        <img src="img/logo.png" class="logoImage">
+        <form id="loginForm" action="#">
+          <input type="text" class="username">
+          <input type="password" class="password">
+        </form>
+        <div class="loginButton button" value="Login">
+      </div>
+    </div>
+    <script>
+    head.ready(function() {
+      window.app = new App();
+      window.login = new Login();
+      // app.load();
+    });
+    </script>
+  </body>
+</html>
