@@ -243,6 +243,7 @@ body { height: 100%; margin: 0; padding: 0; background:#363636; font-family:'Luc
 	height: 50px;
 	display: block;
 	margin-top: 25px;
+
 }
 
 .loginButton:after {
